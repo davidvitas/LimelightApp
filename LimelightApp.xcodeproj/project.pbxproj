@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		911332F526153CA40069B301 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911332F426153CA40069B301 /* HomeView.swift */; };
+		912209D7261354E2008E4DBE /* LimelightAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209D6261354E2008E4DBE /* LimelightAppApp.swift */; };
+		912209D9261354E2008E4DBE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209D8261354E2008E4DBE /* ContentView.swift */; };
+		912209DB261354E3008E4DBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912209DA261354E3008E4DBE /* Assets.xcassets */; };
+		912209DE261354E3008E4DBE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912209DD261354E3008E4DBE /* Preview Assets.xcassets */; };
+		912209E826135779008E4DBE /* LabelViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209E726135779008E4DBE /* LabelViews.swift */; };
+		912209EC26138CD6008E4DBE /* TextViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209EB26138CD6008E4DBE /* TextViews.swift */; };
+		91B9B81A261E32DA00E196B3 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B9B819261E32DA00E196B3 /* Task.swift */; };
+		91B9B81E261E32F000E196B3 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B9B81D261E32F000E196B3 /* Date.swift */; };
+		91D6F5142613E17000F2ABEB /* NewTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D6F5132613E17000F2ABEB /* NewTaskView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		911332F426153CA40069B301 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		912209D3261354E2008E4DBE /* LimelightApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LimelightApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		912209D6261354E2008E4DBE /* LimelightAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimelightAppApp.swift; sourceTree = "<group>"; };
+		912209D8261354E2008E4DBE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		912209DA261354E3008E4DBE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		912209DD261354E3008E4DBE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		912209DF261354E3008E4DBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		912209E726135779008E4DBE /* LabelViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelViews.swift; sourceTree = "<group>"; };
+		912209EB26138CD6008E4DBE /* TextViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViews.swift; sourceTree = "<group>"; };
+		91B9B819261E32DA00E196B3 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		91B9B81D261E32F000E196B3 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		91D6F5132613E17000F2ABEB /* NewTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		912209D0261354E2008E4DBE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		912209CA261354E2008E4DBE = {
+			isa = PBXGroup;
+			children = (
+				912209D5261354E2008E4DBE /* LimelightApp */,
+				912209D4261354E2008E4DBE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		912209D4261354E2008E4DBE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				912209D3261354E2008E4DBE /* LimelightApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		912209D5261354E2008E4DBE /* LimelightApp */ = {
+			isa = PBXGroup;
+			children = (
+				912209D6261354E2008E4DBE /* LimelightAppApp.swift */,
+				91B9B81C261E32E000E196B3 /* Models */,
+				912209E6261356FB008E4DBE /* Views */,
+				912209DA261354E3008E4DBE /* Assets.xcassets */,
+				912209DF261354E3008E4DBE /* Info.plist */,
+				912209DC261354E3008E4DBE /* Preview Content */,
+			);
+			path = LimelightApp;
+			sourceTree = "<group>";
+		};
+		912209DC261354E3008E4DBE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				912209DD261354E3008E4DBE /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		912209E6261356FB008E4DBE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				912209D8261354E2008E4DBE /* ContentView.swift */,
+				91D6F5132613E17000F2ABEB /* NewTaskView.swift */,
+				911332F426153CA40069B301 /* HomeView.swift */,
+				912209E726135779008E4DBE /* LabelViews.swift */,
+				912209EB26138CD6008E4DBE /* TextViews.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		91B9B81C261E32E000E196B3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				91B9B819261E32DA00E196B3 /* Task.swift */,
+				91B9B81D261E32F000E196B3 /* Date.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		912209D2261354E2008E4DBE /* LimelightApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 912209E2261354E3008E4DBE /* Build configuration list for PBXNativeTarget "LimelightApp" */;
+			buildPhases = (
+				912209CF261354E2008E4DBE /* Sources */,
+				912209D0261354E2008E4DBE /* Frameworks */,
+				912209D1261354E2008E4DBE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LimelightApp;
+			productName = LimelightApp;
+			productReference = 912209D3261354E2008E4DBE /* LimelightApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		912209CB261354E2008E4DBE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					912209D2261354E2008E4DBE = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
+			};
+			buildConfigurationList = 912209CE261354E2008E4DBE /* Build configuration list for PBXProject "LimelightApp" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 912209CA261354E2008E4DBE;
+			productRefGroup = 912209D4261354E2008E4DBE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				912209D2261354E2008E4DBE /* LimelightApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		912209D1261354E2008E4DBE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				912209DE261354E3008E4DBE /* Preview Assets.xcassets in Resources */,
+				912209DB261354E3008E4DBE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		912209CF261354E2008E4DBE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				912209D9261354E2008E4DBE /* ContentView.swift in Sources */,
+				91D6F5142613E17000F2ABEB /* NewTaskView.swift in Sources */,
+				912209EC26138CD6008E4DBE /* TextViews.swift in Sources */,
+				91B9B81E261E32F000E196B3 /* Date.swift in Sources */,
+				911332F526153CA40069B301 /* HomeView.swift in Sources */,
+				912209E826135779008E4DBE /* LabelViews.swift in Sources */,
+				91B9B81A261E32DA00E196B3 /* Task.swift in Sources */,
+				912209D7261354E2008E4DBE /* LimelightAppApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		912209E0261354E3008E4DBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		912209E1261354E3008E4DBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		912209E3261354E3008E4DBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"LimelightApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 96962MZPPA;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = LimelightApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.DavidVitas.LimelightApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		912209E4261354E3008E4DBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"LimelightApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 96962MZPPA;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = LimelightApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.DavidVitas.LimelightApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		912209CE261354E2008E4DBE /* Build configuration list for PBXProject "LimelightApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				912209E0261354E3008E4DBE /* Debug */,
+				912209E1261354E3008E4DBE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		912209E2261354E3008E4DBE /* Build configuration list for PBXNativeTarget "LimelightApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				912209E3261354E3008E4DBE /* Debug */,
+				912209E4261354E3008E4DBE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 912209CB261354E2008E4DBE /* Project object */;
+}
