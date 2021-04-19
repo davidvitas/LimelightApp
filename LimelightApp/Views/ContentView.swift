@@ -59,11 +59,6 @@ struct ContentView: View {
                         OptionsButton()
                     }
                     .padding()
-                    //                    .onAppear(perform: {
-                    //                        if activeDate == nil {
-                    //                            print(123)
-                    //                        }
-                    //                    })
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 20) {
                             ForEach(dateArray) { date in
@@ -127,7 +122,7 @@ struct ContentView: View {
                 }
                 if showingHomeView {
                     HomeView()
-                    .animation(.interactiveSpring())
+                        .animation(.interactiveSpring())
                 } else {
                     ScrollView(showsIndicators: false) {
                         
@@ -137,6 +132,14 @@ struct ContentView: View {
                             activeDate.taskArrayMedium()
                         let taskArrayLow =
                             activeDate.taskArrayLow()
+                        if taskArrayHigh.isEmpty == true && taskArrayMedium.isEmpty == true && taskArrayLow.isEmpty == true {
+                                Image("sad-tear")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(Color("TitleTextHeader"))
+                                    .frame(width: 50, height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            ListHeader(text: "No Tasks")
+                        }
                         if taskArrayHigh.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "High Priority")

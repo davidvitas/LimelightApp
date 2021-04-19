@@ -401,7 +401,6 @@ struct NewTaskButton: View {
 }
 
 struct TaskTracker: View {
-    
     var body: some View {
         Rectangle()
             .frame(height: 8)
