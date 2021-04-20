@@ -11,13 +11,13 @@ import Combine
 
 class Task: ObservableObject, Identifiable {
     var id = UUID()
+    
     var title: String
     var description: String
     @Published var priority: Priority?
     @Published var complete: Complete?
     @Published var category: Category?
     @Published var isComplete: Bool = false
-
     
     var buttonColorHigh: Color = Color("TaskButton")
     var buttonColorMedium: Color = Color("TaskButton")
@@ -48,33 +48,6 @@ class Task: ObservableObject, Identifiable {
         self.priority = priority
         self.complete = complete
         self.category = category
-    }
-    
-    func taskReset() {
-        buttonColorHigh = Color("TaskButton")
-        buttonColorMedium = Color("TaskButton")
-        buttonColorLow = Color("TaskButton")
-        textColorHigh = Color("RemainingText")
-        textColorMedium = Color("RemainingText")
-        textColorLow = Color("RemainingText")
-        
-        buttonColorEndOfDay = Color("TaskButton")
-        textColorEndOfDay = Color("RemainingText")
-        buttonColorWithin24Hours = Color("TaskButton")
-        textColorWithin24Hours = Color("RemainingText")
-        
-        buttonColorHome = Color("TaskButton")
-        buttonColorWork = Color("TaskButton")
-        textColorHome = Color("RemainingText")
-        textColorWork = Color("RemainingText")
-        categorySquareHome = Color("CategorySquare")
-        categorySquareWork = Color("CategorySquare")
-        
-        title = ""
-        description = ""
-        priority = nil
-        complete = nil
-        category = nil
     }
     
     func colorChangePriority() {

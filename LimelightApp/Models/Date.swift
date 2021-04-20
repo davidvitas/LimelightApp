@@ -40,25 +40,17 @@ class TaskDate: ObservableObject, Identifiable {
         return nextDate ?? Date()
     }()
     
-    func taskArrayHigh() -> [Task] {
+    func taskArrayPriority(priority: Task.Priority) -> [Task] {
         var array: [Task] = []
-        for i in taskArray where i.priority == .high {
+        for i in taskArray where i.priority == priority {
             array.append(i)
         }
         return array
     }
     
-    func taskArrayMedium() -> [Task] {
+    func taskArrayIsComplete(onArray: [Task], completed: Bool) -> [Task] {
         var array: [Task] = []
-        for i in taskArray where i.priority == .medium {
-            array.append(i)
-        }
-        return array
-    }
-    
-    func taskArrayLow() -> [Task] {
-        var array: [Task] = []
-        for i in taskArray where i.priority == .low {
+        for i in onArray where i.isComplete == completed {
             array.append(i)
         }
         return array

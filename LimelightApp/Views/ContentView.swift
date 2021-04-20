@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showingNewTaskView = false
-    @State private var showingHomeView = false
+    @State private var showingHomeView = true
     
     @State var homeButtonColor: Color = Color("DateBackground")
     @State var listButtonColor: Color = Color("DateBackgroundChosen")
@@ -121,17 +121,18 @@ struct ContentView: View {
                     .padding(.bottom, 15)
                 }
                 if showingHomeView {
-                    HomeView()
+                    HomeView(activeDate: activeDate)
                         .animation(.interactiveSpring())
+                    Spacer()
                 } else {
                     ScrollView(showsIndicators: false) {
                         
                         let taskArrayHigh =
-                            activeDate.taskArrayHigh()
+                            activeDate.taskArrayPriority(priority: .high)
                         let taskArrayMedium =
-                            activeDate.taskArrayMedium()
+                            activeDate.taskArrayPriority(priority: .medium)
                         let taskArrayLow =
-                            activeDate.taskArrayLow()
+                            activeDate.taskArrayPriority(priority: .low)
                         if taskArrayHigh.isEmpty == true && taskArrayMedium.isEmpty == true && taskArrayLow.isEmpty == true {
                                 Image("sad-tear")
                                     .resizable()

@@ -8,42 +8,34 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var showingNewTaskView = false
+    var activeDate: TaskDate
     
     var body: some View {
+        
+        let taskPriorityHigh =
+            activeDate.taskArrayPriority(priority: .high)
+        let taskPriorityMedium =
+            activeDate.taskArrayPriority(priority: .medium)
+        let taskPriorityLow =
+            activeDate.taskArrayPriority(priority: .low)
+        
             VStack(alignment: .leading) {
-                DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 2, remaining: 3, completed: 5, priorityColor: Color("HighPriority"))
+                DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: taskPriorityHigh.count, remaining: activeDate.taskArrayIsComplete(onArray: taskPriorityHigh, completed: false).count, completed: activeDate.taskArrayIsComplete(onArray: taskPriorityHigh, completed: true).count, priorityColor: Color("HighPriority"))
                     //.padding(.top, 10)
                     .padding(.horizontal)
-                DashboardPriorityView(priority: "Medium Priority", priorityAmount: "3", listed: 4, remaining: 3, completed: 5, priorityColor: Color("MediumPriority"))
+                DashboardPriorityView(priority: "Medium Priority", priorityAmount: "3", listed: taskPriorityMedium.count, remaining: activeDate.taskArrayIsComplete(onArray: taskPriorityMedium, completed: false).count, completed: activeDate.taskArrayIsComplete(onArray: taskPriorityMedium, completed: true).count, priorityColor: Color("MediumPriority"))
                     .padding(.top)
                     .padding(.horizontal)
-                DashboardPriorityView(priority: "Low Priority", priorityAmount: "5", listed: 4, remaining: 3, completed: 5, priorityColor: Color("LowPriority"))
+                DashboardPriorityView(priority: "Low Priority", priorityAmount: "5", listed: taskPriorityLow.count, remaining: activeDate.taskArrayIsComplete(onArray: taskPriorityLow, completed: false).count, completed: activeDate.taskArrayIsComplete(onArray: taskPriorityLow, completed: true).count, priorityColor: Color("LowPriority"))
                     .padding(.top)
                     .padding(.horizontal)
-                Spacer()
-//                NavigationLink(
-//                    destination: NewTaskView(showingNewTaskView: $showingNewTaskView),
-//                    isActive: $showingNewTaskView,
-//                    label: {
-//                        Text("Navigate")
-//                    }).hidden()
-//                TaskButton(text: "Create New Task", buttonAction: {showingNewTaskView = true
-//                })
-//                .padding(.horizontal)
-//                Spacer()
             }
-//            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
-//            .navigationBarTitle("")
-//            .navigationBarHidden(true)
-            
-        //}
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
-        HomeView().preferredColorScheme(.dark)
+        HomeView(activeDate: TaskDate(isActive: true))
+        HomeView(activeDate: TaskDate(isActive: true)).preferredColorScheme(.dark)
     }
 }
