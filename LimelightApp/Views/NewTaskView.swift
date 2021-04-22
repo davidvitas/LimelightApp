@@ -138,6 +138,7 @@ struct NewTaskView: View {
                 TaskButton(text: "Add Task", buttonAction: {
 //                    taskTitle = task.title
 //                    taskDescription = task.description
+                    task.colorAssign()
                     taskDate.taskArray.append(task)
                     showingNewTaskView = false
                     addTaskDisabled = true

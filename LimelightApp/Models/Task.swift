@@ -14,10 +14,12 @@ class Task: ObservableObject, Identifiable {
     
     var title: String
     var description: String
+    var color: Color = Color("TaskButton")
     @Published var priority: Priority?
     @Published var complete: Complete?
     @Published var category: Category?
     @Published var isComplete: Bool = false
+    
     
     var buttonColorHigh: Color = Color("TaskButton")
     var buttonColorMedium: Color = Color("TaskButton")
@@ -48,6 +50,16 @@ class Task: ObservableObject, Identifiable {
         self.priority = priority
         self.complete = complete
         self.category = category
+    }
+    
+    func colorAssign() {
+        if priority == .high {
+            color = Color("HighPriority")
+        } else if priority == .medium {
+            color = Color("MediumPriority")
+        } else if priority == .low {
+            color = Color("LowPriority")
+        }
     }
     
     func colorChangePriority() {
@@ -135,7 +147,8 @@ class Task: ObservableObject, Identifiable {
         }
     }
     
-    enum Priority: String {
+    enum Priority: Int {
+        
         case high
         case medium
         case low

@@ -145,6 +145,8 @@ struct TaskView: View {
     var complete: String
     var priorityColor: Color
     @ObservedObject var task: Task
+    //@Binding var taskCompletedAmount: Int
+    @ObservedObject var activeDate: TaskDate
 
     
     var body: some View {
@@ -155,9 +157,6 @@ struct TaskView: View {
                         Circle()
                             .stroke(priorityColor, lineWidth: 2.0)
                             .frame(width: 32, height: 32)
-//                            .onTapGesture(perform: {
-//                                task.isComplete.toggle()
-//                            })
                         if task.isComplete == true {
                         Circle()
                             .frame(width: 32, height: 32)
@@ -172,6 +171,11 @@ struct TaskView: View {
                     .padding(.trailing, 3)
                     .onTapGesture(perform: {
                         task.isComplete.toggle()
+                        if task.isComplete == true {
+                            activeDate.taskCompletedAmount += 1
+                        } else {
+                            activeDate.taskCompletedAmount -= 1
+                        }
                     })
                     Spacer()
                     
@@ -401,11 +405,19 @@ struct NewTaskButton: View {
 }
 
 struct TaskTracker: View {
+    @ObservedObject var activeDate: TaskDate
+    var position: Int
+    
     var body: some View {
+        
+        let taskTrackerColor = activeDate.taskTrackerColor(onArray: activeDate.taskArray, position: position)
+        
         Rectangle()
             .frame(height: 8)
             .cornerRadius(8)
-            .foregroundColor(Color("TaskTracker"))
+            .foregroundColor(taskTrackerColor)
+            .animation(.easeIn(duration: 0.1))
+        
     }
 }
 
@@ -439,8 +451,8 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), task: Task())
-            TaskTracker()
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), task: Task(), activeDate: TaskDate(isActive: false))
+            TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
             TaskViewOpen(task: "Grocery Shopping", category: "Home", remaining: 204, completed: 4)
             TaskEditButton(text: "Edit Task")
         }

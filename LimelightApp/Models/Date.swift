@@ -15,6 +15,7 @@ class TaskDate: ObservableObject, Identifiable {
     @Published var date: Date = Date()
     @Published var taskArray: [Task] = []
     @Published var isActive: Bool
+    @Published var taskCompletedAmount = 0
     
     init(isActive: Bool) {
         self.isActive = isActive
@@ -59,12 +60,34 @@ class TaskDate: ObservableObject, Identifiable {
     func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
         var isActive: TaskDate!
         for i in dateArray where i.isActive == true {
-           isActive = i
+            isActive = i
         }
         return isActive
     }
     
-    
-    
+    func taskTrackerColor (onArray: [Task], position: Int) -> Color { // two params, array and position (which dash line from 0 - 8)
+        var array = taskArrayIsComplete(onArray: onArray, completed: true) // helper function that returns an array of completed tasks
+        var color: Color = Color("TaskButton") // variable to store color
+        
+        array.sort {
+            $0.priority?.rawValue ?? 0 < $1.priority?.rawValue ?? 1 // sorts the array based on high/medium/low priority
+        }
+        
+        let validIndex = array.indices.contains(position) // checks if index exists
+        
+        switch position { // switches on the dash position
+        case 0...8:
+            
+            if array.isEmpty == false && validIndex == true {
+                color = array[position].color
+            }
+        
+        default: color = Color("TaskButton")
+        
+        }
+        
+        return color // returns correct color
+        
+    }
     
 }

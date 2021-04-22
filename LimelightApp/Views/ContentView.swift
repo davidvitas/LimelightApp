@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showingNewTaskView = false
-    @State private var showingHomeView = true
+    @State private var showingHomeView = false
+    //@State var taskCompletedAmount = 0
     
     @State var homeButtonColor: Color = Color("DateBackground")
     @State var listButtonColor: Color = Color("DateBackgroundChosen")
@@ -17,9 +18,9 @@ struct ContentView: View {
     @ObservedObject var taskDate: TaskDate = TaskDate(isActive: true)
     @ObservedObject var taskDateTwo: TaskDate = TaskDate(isActive: false)
     
-    @State var dateArrayTest: [TaskDate] = []
+    //@State var dateArrayTest: [TaskDate] = []
     
-    var task: Task = Task()
+    //var task: Task = Task()
     
     static let taskDateFormat: DateFormatter = {
         let formatter = DateFormatter()
@@ -106,16 +107,9 @@ struct ContentView: View {
                     .padding(.top)
                     .padding(.horizontal)
                     HStack {
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        TaskTracker()
-                        
+                        ForEach(0...8, id: \.self) { position in
+                            TaskTracker(activeDate: taskDateIsActive(dateArray: dateArray), position: position)
+                        }
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 15)
@@ -133,12 +127,13 @@ struct ContentView: View {
                             activeDate.taskArrayPriority(priority: .medium)
                         let taskArrayLow =
                             activeDate.taskArrayPriority(priority: .low)
+                        
                         if taskArrayHigh.isEmpty == true && taskArrayMedium.isEmpty == true && taskArrayLow.isEmpty == true {
-                                Image("sad-tear")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(Color("TitleTextHeader"))
-                                    .frame(width: 50, height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            Image("sad-tear")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(Color("TitleTextHeader"))
+                                .frame(width: 50, height: 50, alignment: .center)
                             ListHeader(text: "No Tasks")
                         }
                         if taskArrayHigh.isEmpty == false {
@@ -146,7 +141,7 @@ struct ContentView: View {
                                 ListHeader(text: "High Priority")
                                     .padding(.horizontal)
                                 ForEach(taskArrayHigh) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), task: task)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
@@ -159,7 +154,7 @@ struct ContentView: View {
                                     //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(taskArrayMedium) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), task: task)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
@@ -172,7 +167,7 @@ struct ContentView: View {
                                     //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(taskArrayLow) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), task: task)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
