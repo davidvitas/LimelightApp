@@ -198,6 +198,7 @@ struct TaskView: View {
                             .fontWeight(.semibold)
                             .font(.title3)
                             .kerning(0.4)
+                            .lineLimit(1)
                     }
                     .padding(.leading, 10)
                     .padding(.trailing)
@@ -278,7 +279,7 @@ struct TaskViewOpen: View {
                                 HStack {
                                     Spacer()
                                 }
-                                DescriptionText(text: "Pick up from Whole Foods: bananas, oat milk, avocados, and ingredients for pasta; Pick up from Walmart: kitchen towels, ")
+                                DescriptionText(text: "Pick up from Whole Foods: bananas, oat milk, avocados, and ingredients for pasta; Pick up from Walmart: kitchen towels. I like ")
                             }
                             .padding(.leading, 10)
                             .padding(.trailing)

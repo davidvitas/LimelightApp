@@ -17,7 +17,7 @@ struct ContentView: View {
     
     @ObservedObject var taskDate: TaskDate = TaskDate(isActive: true)
     @ObservedObject var taskDateTwo: TaskDate = TaskDate(isActive: false)
-    
+
     //@State var dateArrayTest: [TaskDate] = []
     
     //var task: Task = Task()

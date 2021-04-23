@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9110BE1A263238BC009320F4 /* TextLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9110BE19263238BC009320F4 /* TextLimiter.swift */; };
 		911332F526153CA40069B301 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911332F426153CA40069B301 /* HomeView.swift */; };
 		912209D7261354E2008E4DBE /* LimelightAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209D6261354E2008E4DBE /* LimelightAppApp.swift */; };
 		912209D9261354E2008E4DBE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912209D8261354E2008E4DBE /* ContentView.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9110BE19263238BC009320F4 /* TextLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLimiter.swift; sourceTree = "<group>"; };
 		911332F426153CA40069B301 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		912209D3261354E2008E4DBE /* LimelightApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LimelightApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912209D6261354E2008E4DBE /* LimelightAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimelightAppApp.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 		91B9B81C261E32E000E196B3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9110BE19263238BC009320F4 /* TextLimiter.swift */,
 				91B9B819261E32DA00E196B3 /* Task.swift */,
 				91B9B81D261E32F000E196B3 /* Date.swift */,
 			);
@@ -176,6 +179,7 @@
 				91D6F5142613E17000F2ABEB /* NewTaskView.swift in Sources */,
 				912209EC26138CD6008E4DBE /* TextViews.swift in Sources */,
 				91B9B81E261E32F000E196B3 /* Date.swift in Sources */,
+				9110BE1A263238BC009320F4 /* TextLimiter.swift in Sources */,
 				911332F526153CA40069B301 /* HomeView.swift in Sources */,
 				912209E826135779008E4DBE /* LabelViews.swift in Sources */,
 				91B9B81A261E32DA00E196B3 /* Task.swift in Sources */,

@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct NewTaskView: View {
-    @State var taskTitle = ""
-    @State var taskDescription = ""
     @State var addTaskDisabled = true
     @Binding var showingNewTaskView: Bool
     @ObservedObject var task: Task
     @ObservedObject var taskDate: TaskDate
+    @ObservedObject var taskTitle = TextLimiter(limit: 25)
+    @ObservedObject var taskDescription = TextLimiter(limit: 125)
     
-
     
     func enableAddTask() -> Bool {
         if task.title.isEmpty == false && task.description.isEmpty == false && task.priority != nil && task.complete != nil && task.category != nil {
@@ -32,12 +31,12 @@ struct NewTaskView: View {
                     .foregroundColor(Color("TaskButton"))
                     .cornerRadius(40, corners: [.bottomLeft, .bottomRight])
                 
-                NewTaskHeader(taskTitle: $taskTitle, buttonAction: {
+                NewTaskHeader(taskTitle: taskTitle, buttonAction: {
                     showingNewTaskView = false
                 }, task: task)
             }
             .frame(height: 275)
-
+            
             Spacer()
             VStack(alignment: .leading) {
                 TaskTitle(text: "Description")
@@ -45,15 +44,15 @@ struct NewTaskView: View {
                     .padding(.top)
                 
                 ZStack(alignment: .leading) {
-                    if taskDescription.isEmpty {
+                    if taskDescription.value.isEmpty {
                         TextFieldText(text: "add a short description for this task...")
                     }
-                    TextField("", text: $taskDescription)
-                        .onChange(of: taskDescription, perform: { value in
-                            task.description = taskDescription
+                    TextField("", text: $taskDescription.value)
+                        .onChange(of: taskDescription.value, perform: { value in
+                            task.description = taskDescription.value
                         })
                 }
-                .padding(.leading)
+                .padding(.horizontal)
                 .padding(.top, 15)
                 
                 Divider()
@@ -136,17 +135,17 @@ struct NewTaskView: View {
             VStack {
                 
                 TaskButton(text: "Add Task", buttonAction: {
-//                    taskTitle = task.title
-//                    taskDescription = task.description
+                    //                    taskTitle = task.title
+                    //                    taskDescription = task.description
                     task.colorAssign()
                     taskDate.taskArray.append(task)
                     showingNewTaskView = false
                     addTaskDisabled = true
                 })
-                    .padding()
-                    .disabled(taskTitle.isEmpty || taskDescription.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
-                    .animation(.easeOut)
-                    .buttonStyle(PlainButtonStyle())
+                .padding()
+                .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
+                .animation(.easeOut)
+                .buttonStyle(PlainButtonStyle())
                 
             }
             .padding()
@@ -162,7 +161,7 @@ struct NewTaskView: View {
 }
 
 struct NewTaskHeader: View {
-    @Binding var taskTitle: String
+    @ObservedObject var taskTitle: TextLimiter
     var buttonAction = {}
     var task: Task
     
@@ -185,15 +184,13 @@ struct NewTaskHeader: View {
             TaskTitle(text: "Task Title")
                 .padding(.top, 30)
             ZStack(alignment: .leading) {
-                if taskTitle.isEmpty {
+                if taskTitle.value.isEmpty {
                     TextFieldText(text: "Add a title for your task...")
                 }
-                TextField("", text: $taskTitle)
-                    .onChange(of: taskTitle, perform: { value in
-                        task.title = taskTitle
-                    })
-                    
-                    
+                TextField("", text: $taskTitle.value)
+                    .onChange(of: taskTitle.value, perform: { value in
+                        task.title = taskTitle.value
+                    })  
             }
             .padding(.top, 13)
             Divider()
