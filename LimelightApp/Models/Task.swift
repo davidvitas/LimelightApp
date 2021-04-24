@@ -19,6 +19,7 @@ class Task: ObservableObject, Identifiable {
     @Published var complete: Complete?
     @Published var category: Category?
     @Published var isComplete: Bool = false
+    @Published var isExpanded: Bool = false
     
     
     var buttonColorHigh: Color = Color("TaskButton")

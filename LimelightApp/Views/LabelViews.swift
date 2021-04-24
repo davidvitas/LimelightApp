@@ -59,32 +59,30 @@ struct NewDateView: View {
 
 struct TaskRect: View {
     var priorityColor: Color
+    @ObservedObject var task: Task
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
             Rectangle()
-                .frame(height: 77)
-                //.frame(minWidth: 355, idealWidth: 370, maxWidth: 370)
+                //.frame(height: task.isExpanded ? 234 : 77)
                 .foregroundColor(Color("TaskRectangle"))
             Rectangle()
-                .frame(width: 8, height: 77)
+                .frame(width: 8)
                 .foregroundColor(priorityColor)
         }
     }
 }
 
-struct TaskRectOpen: View {
+struct HomeRect: View {
     var priorityColor: Color
-    var heightValue: CGFloat
     
     var body: some View {
-        ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
+        ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
             Rectangle()
-                .frame(height: heightValue)
-                //.frame(minWidth: 355, idealWidth: 370, maxWidth: 370)
+                .frame(height: 77)
                 .foregroundColor(Color("TaskRectangle"))
             Rectangle()
-                .frame(height: 8)
+                .frame(width: 8, height: 77)
                 .foregroundColor(priorityColor)
         }
     }
@@ -100,42 +98,42 @@ struct DashboardPriorityView: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            TaskRect(priorityColor: priorityColor)
-                VStack(alignment: .leading) {
-                    HStack(alignment: .center) {
-                        ZStack {
-                            Circle()
-                                .foregroundColor(priorityColor)
-                                .frame(width: 41, height: 41)
-                            Text(priorityAmount)
-                                .foregroundColor(.white)
-                                .fontWeight(.bold)
-                                .font(.title2)
-                                .kerning(0.44)
-                            //.offset(x: -0.5)
-                        }                    .frame(width: 58, height: 77, alignment: .trailing)
-                        .padding(.leading, 9)
-                        //Spacer()
-                        VStack(alignment: .leading) {
-                            Text(priority)
-                                .foregroundColor(Color("PriorityTextHeader"))
-                                .fontWeight(.semibold)
-                                .font(.title3)
-                                .kerning(0.4)
-                            
-                            Text("\(listed) listed / \(remaining) remaining / \(completed) completed")
-                                .foregroundColor(Color("RemainingText"))
-                                .fontWeight(.regular)
-                                .font(.callout)
-                                .kerning(0.32)
-                                .lineLimit(1)
-                            
-                        }
-                        .padding(.horizontal)
+            HomeRect(priorityColor: priorityColor)
+            VStack(alignment: .leading) {
+                HStack(alignment: .center) {
+                    ZStack {
+                        Circle()
+                            .foregroundColor(priorityColor)
+                            .frame(width: 41, height: 41)
+                        Text(priorityAmount)
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                            .font(.title2)
+                            .kerning(0.44)
+                        //.offset(x: -0.5)
+                    }                    .frame(width: 58, height: 77, alignment: .trailing)
+                    .padding(.leading, 9)
+                    //Spacer()
+                    VStack(alignment: .leading) {
+                        Text(priority)
+                            .foregroundColor(Color("PriorityTextHeader"))
+                            .fontWeight(.semibold)
+                            .font(.title3)
+                            .kerning(0.4)
+                        
+                        Text("\(listed) listed / \(remaining) remaining / \(completed) completed")
+                            .foregroundColor(Color("RemainingText"))
+                            .fontWeight(.regular)
+                            .font(.callout)
+                            .kerning(0.32)
+                            .lineLimit(1)
+                        
                     }
+                    .padding(.horizontal)
                 }
-    }
-            
+            }
+        }
+        
     }
 }
 
@@ -144,41 +142,49 @@ struct TaskView: View {
     var category: String
     var complete: String
     var priorityColor: Color
+    var description: String
     @ObservedObject var task: Task
-    //@Binding var taskCompletedAmount: Int
     @ObservedObject var activeDate: TaskDate
-
     
     var body: some View {
-        TaskRect(priorityColor: priorityColor)
-            .overlay(
-                HStack(alignment: .center) {
-                    ZStack {
-                        Circle()
-                            .stroke(priorityColor, lineWidth: 2.0)
-                            .frame(width: 32, height: 32)
-                        if task.isComplete == true {
-                        Circle()
-                            .frame(width: 32, height: 32)
-                            .foregroundColor(priorityColor)
-                        
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.white)
-                        }
+        ZStack(alignment: .top) {
+            TaskRect(priorityColor: priorityColor, task: task)
+                .onTapGesture {
+                    withAnimation(.easeOut(duration: 0.25)) {
+                        task.isExpanded.toggle()
                     }
-                    .frame(width: 50, height: 77, alignment: .trailing)
-                    .padding(.leading, 10)
-                    .padding(.trailing, 3)
-                    .onTapGesture(perform: {
-                        task.isComplete.toggle()
-                        if task.isComplete == true {
-                            activeDate.taskCompletedAmount += 1
-                        } else {
-                            activeDate.taskCompletedAmount -= 1
+                }
+            VStack {
+                HStack(alignment: .center) {
+                        Button(action: {
+                            task.isComplete.toggle()
+                            if task.isComplete {
+                                activeDate.taskCompletedAmount += 1
+                            } else {
+                                activeDate.taskCompletedAmount -= 1
+                            }
+                            
+                        }) {
+                            ZStack {
+                            Circle()
+                                .stroke(priorityColor, lineWidth: 2.0)
+                                .frame(width: 32, height: 32)
+                            if task.isComplete {
+                                Circle()
+                                    .frame(width: 32, height: 32)
+                                    .foregroundColor(priorityColor)
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.white)
+                            }
                         }
-                    })
+                        .frame(width: 50, height: 77, alignment: .trailing)
+                        .padding(.leading, 10)
+                        .padding(.trailing, 3)
+                            .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                            .animation(.easeOut(duration: 0.25))
+                        }
+                        .animation(.none)
                     Spacer()
-                    
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             HomeText(text: complete)
@@ -202,102 +208,46 @@ struct TaskView: View {
                     }
                     .padding(.leading, 10)
                     .padding(.trailing)
-                    
-                    
                 }
-            )
-    }
-}
-
-struct TaskViewOpen: View {
-    var task: String
-    var category: String
-    var remaining: Int
-    var completed: Int
-    var rectHeight: CGFloat = 234
-    
-    var body: some View {
-        ZStack(alignment: .top) {
-            TaskRectOpen(priorityColor: Color("HighPriority"), heightValue: rectHeight)
-            VStack(spacing: 1) {
-                HStack(alignment: .center) {
-                        ZStack {
-                            Circle()
-                                .stroke(Color("HighPriority"), lineWidth: 2.0)
-                                .frame(width: 32, height: 32)
-                            
-                            Circle()
-                                .frame(width: 32, height: 32)
-                                .foregroundColor(Color("HighPriority"))
-                            
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.white)
-                        }
-                        .frame(width: 50, height: 77, alignment: .trailing)
-                        .padding(.leading, 10)
-                        .padding(.trailing, 3)
-                        Spacer()
-                        
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            
-                            HStack {
-                                HomeText(text: "By end of day")
+                if task.isExpanded {
+                        HStack {
+                            HStack(alignment: .center) {
+                                VStack {}
+                                    .frame(width: 50)
+                                    .padding(.leading, 10)
+                                    .padding(.trailing, 3)
                                 Spacer()
-                                HStack {
-                                    Rectangle()
-                                        .foregroundColor(Color("CategorySquare"))
-                                        .frame(width: 9, height: 9)
-                                    Text(category.uppercased())
-                                        .foregroundColor(Color("TaskSubtext"))
-                                        .font(.caption)
-                                        .fontWeight(.regular)
+                                
+                                VStack(alignment: .leading, spacing: 0) {
+                                    HStack {
+                                        Spacer()
+                                    }
+                                    DescriptionText(text: description)
                                 }
+                                .padding(.leading, 10)
+                                .padding(.trailing)
+                                .lineLimit(3)
                             }
-                            
-                            Text(task)
-                                .foregroundColor(Color("PriorityTextHeader"))
-                                .fontWeight(.semibold)
-                                .font(.title3)
-                                .kerning(0.4)
                         }
-                        .padding(.leading, 10)
-                        .padding(.trailing)
-                        
-                        
-                    }
-                .padding(.top, 7)
-                HStack {
-                    HStack(alignment: .center) {
-                            VStack {}
-                            .frame(width: 50)
-                            .padding(.leading, 10)
-                            .padding(.trailing, 3)
-                            Spacer()
+                        .opacity(task.isExpanded ? 1 : 0)
+                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                        .animation(.easeOut(duration: 0.25))
 
-                            VStack(alignment: .leading, spacing: 0) {
-                                HStack {
-                                    Spacer()
-                                }
-                                DescriptionText(text: "Pick up from Whole Foods: bananas, oat milk, avocados, and ingredients for pasta; Pick up from Walmart: kitchen towels. I like ")
-                            }
-                            .padding(.leading, 10)
-                            .padding(.trailing)
+                        HStack {
+                            TaskEditButton(text: "Edit")
+                            TaskEditButton(text: "Delete")
+
                         }
+                        .padding(.horizontal)
+                        .padding(.vertical, 23)
+                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                        .animation(.easeOut(duration: 0.25))
+                        //.transition(.move(edge: .top).combined(with: .scale))
                 }
-                HStack {
-                    TaskEditButton(text: "Edit")
-                    TaskEditButton(text: "Delete")
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 23)
             }
-    }
-        
-            
+        }
     }
 }
-
 
 struct TaskButton: View {
     var text: String
@@ -438,11 +388,7 @@ struct listViewButton: View {
 struct LabelViews: View {
     var body: some View {
         VStack {
-            HStack {
-                //DateView(dateDay: "MON", dateNumber: "25")
-                NewDateView()
-            }
-            TaskRect(priorityColor: Color("HighPriority"))
+            
             DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 0, remaining: 2, completed: 3, priorityColor: Color("HighPriority"))
             //.padding()
             TaskButton(text: "Create New Task")
@@ -452,10 +398,8 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), task: Task(), activeDate: TaskDate(isActive: false))
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123", task: Task(), activeDate: TaskDate(isActive: false))
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
-            TaskViewOpen(task: "Grocery Shopping", category: "Home", remaining: 204, completed: 4)
-            TaskEditButton(text: "Edit Task")
         }
     }
 }

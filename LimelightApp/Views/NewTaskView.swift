@@ -13,7 +13,7 @@ struct NewTaskView: View {
     @ObservedObject var task: Task
     @ObservedObject var taskDate: TaskDate
     @ObservedObject var taskTitle = TextLimiter(limit: 25)
-    @ObservedObject var taskDescription = TextLimiter(limit: 125)
+    @ObservedObject var taskDescription = TextLimiter(limit: 110)
     
     
     func enableAddTask() -> Bool {
