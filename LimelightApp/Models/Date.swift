@@ -11,7 +11,6 @@ import SwiftUI
 
 class TaskDate: ObservableObject, Identifiable {
     var id = UUID()
-    
     @Published var date: Date = Date()
     @Published var taskArray: [Task] = []
     @Published var isActive: Bool
@@ -63,6 +62,10 @@ class TaskDate: ObservableObject, Identifiable {
             isActive = i
         }
         return isActive
+    }
+    
+    func removeTask(activeDate: TaskDate, activeTask: Task) {
+        taskArray.removeAll() {$0.id == activeTask.id}
     }
     
     func taskTrackerColor (onArray: [Task], position: Int) -> Color { // two params, array and position (which dash line from 0 - 8)

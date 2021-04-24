@@ -234,15 +234,17 @@ struct TaskView: View {
                         .animation(.easeOut(duration: 0.25))
 
                         HStack {
-                            TaskEditButton(text: "Edit")
-                            TaskEditButton(text: "Delete")
-
+                            TaskEditButton(text: "Edit", buttonAction: {
+                                activeDate.removeTask(activeDate: activeDate, activeTask: task)
+                            })
+                            TaskEditButton(text: "Delete", buttonAction: {
+                                activeDate.removeTask(activeDate: activeDate, activeTask: task)
+                            })
                         }
                         .padding(.horizontal)
-                        .padding(.vertical, 23)
+                        .padding(.vertical, 19)
                         .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
                         .animation(.easeOut(duration: 0.25))
-                        //.transition(.move(edge: .top).combined(with: .scale))
                 }
             }
         }
@@ -398,7 +400,7 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123", task: Task(), activeDate: TaskDate(isActive: false))
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", task: Task(), activeDate: TaskDate(isActive: false))
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
         }
     }

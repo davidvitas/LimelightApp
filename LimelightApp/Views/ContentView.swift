@@ -16,7 +16,7 @@ struct ContentView: View {
     
     @ObservedObject var taskDate: TaskDate = TaskDate(isActive: true)
     @ObservedObject var taskDateTwo: TaskDate = TaskDate(isActive: false)
-
+    
     //@State var dateArrayTest: [TaskDate] = []
     
     //var task: Task = Task()
@@ -68,11 +68,6 @@ struct ContentView: View {
                                             i.isActive = false
                                         }
                                         date.isActive.toggle()
-                                        print(dateArray[0].taskArray)
-                                        print(dateArray[1].taskArray)
-                                        print(dateArray[0].isActive)
-                                        print(dateArray[1].isActive)
-                                        
                                     })
                                 
                                 
@@ -82,6 +77,7 @@ struct ContentView: View {
                     }
                     .onAppear(perform: {
                         taskDateTwo.date = dayComponent
+//                        taskDate.taskArray = [Task(title: "123", description: "1234", priority: .high, complete: .endOfDay, category: .home), Task(title: "123", description: "1234", priority: .high, complete: .endOfDay, category: .home), Task(title: "123", description: "1234", priority: .high, complete: .endOfDay, category: .home), Task(title: "123", description: "1234", priority: .medium, complete: .endOfDay, category: .home), Task(title: "123", description: "1234", priority: .high, complete: .endOfDay, category: .home)]
                     })
                     
                     HStack(alignment: .center) {
@@ -118,16 +114,25 @@ struct ContentView: View {
                         .animation(.interactiveSpring())
                     Spacer()
                 } else {
-                    ScrollView(showsIndicators: false) {
-                        
-                        let taskArrayHigh =
-                            activeDate.taskArrayPriority(priority: .high)
-                        let taskArrayMedium =
-                            activeDate.taskArrayPriority(priority: .medium)
-                        let taskArrayLow =
-                            activeDate.taskArrayPriority(priority: .low)
-                        
-                        if taskArrayHigh.isEmpty == true && taskArrayMedium.isEmpty == true && taskArrayLow.isEmpty == true {
+                    let taskArrayHigh =
+                        activeDate.taskArrayPriority(priority: .high)
+                    let taskArrayMedium =
+                        activeDate.taskArrayPriority(priority: .medium)
+                    let taskArrayLow =
+                        activeDate.taskArrayPriority(priority: .low)
+                    
+                    if taskArrayHigh.isEmpty == true && taskArrayMedium.isEmpty == true && taskArrayLow.isEmpty == true {
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        VStack {
+                            Spacer()
                             Image("sad-tear")
                                 .resizable()
                                 .scaledToFit()
@@ -135,6 +140,8 @@ struct ContentView: View {
                                 .frame(width: 50, height: 50, alignment: .center)
                             ListHeader(text: "No Tasks")
                         }
+                    }
+                    ScrollView(showsIndicators: false) {
                         if taskArrayHigh.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "High Priority")
@@ -143,13 +150,9 @@ struct ContentView: View {
                                     TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
-                                        .onTapGesture {
-                                        
-//                                        .transition(.move(edge: .bottom))
-
-                                    }
                                 }
                             }
+                            .animation(.easeOut(duration: 0.25))
                             .padding(.bottom, 40)
                         }
                         if taskArrayMedium.isEmpty == false {
@@ -163,12 +166,12 @@ struct ContentView: View {
                                         .padding(.horizontal)
                                 }
                             }
+                            .animation(.easeOut(duration: 0.25))
                             .padding(.bottom, 40)
                         }
                         if taskArrayLow.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "Low Priority")
-                                    //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(taskArrayLow) { task in
                                     TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, task: task, activeDate: activeDate)
@@ -176,6 +179,7 @@ struct ContentView: View {
                                         .padding(.horizontal)
                                 }
                             }
+                            .animation(.easeOut(duration: 0.25))
                         }
                     }
                     .padding(.bottom)
