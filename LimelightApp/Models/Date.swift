@@ -56,13 +56,29 @@ class TaskDate: ObservableObject, Identifiable {
         return array
     }
     
+//    func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
+//        var isActive: TaskDate!
+//        for i in dateArray where i.isActive == true {
+//            isActive = i
+//        }
+//        return isActive
+//    }
+    
+    func minimizeTask(dateArray: [TaskDate]) {
+        for i in taskDateIsActive(dateArray: dateArray).taskArray where i.isExpanded == true{
+            i.isExpanded = false
+        }
+    }
+    
     func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
-        var isActive: TaskDate!
+        var isActive: TaskDate = TaskDate(isActive: false)
         for i in dateArray where i.isActive == true {
             isActive = i
         }
         return isActive
     }
+    
+    
     
     func removeTask(activeDate: TaskDate, activeTask: Task) {
         taskArray.removeAll() {$0.id == activeTask.id}

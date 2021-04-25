@@ -11,7 +11,7 @@ import Combine
 
 class Task: ObservableObject, Identifiable {
     var id = UUID()
-    
+    var dateCreated: Date
     var title: String
     var description: String
     var color: Color = Color("TaskButton")
@@ -45,7 +45,8 @@ class Task: ObservableObject, Identifiable {
     var categorySquareWork: Color = Color("CategorySquare")
 
     
-    init(title: String = "", description: String = "", priority: Priority? = nil, complete: Complete? = nil, category: Category? = nil) {
+    init(dateCreated: Date = Date(), title: String = "", description: String = "", priority: Priority? = nil, complete: Complete? = nil, category: Category? = nil) {
+        self.dateCreated = dateCreated
         self.title = title
         self.description = description
         self.priority = priority

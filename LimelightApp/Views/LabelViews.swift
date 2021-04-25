@@ -143,6 +143,7 @@ struct TaskView: View {
     var complete: String
     var priorityColor: Color
     var description: String
+    var duration: Double = 0.25
     @Binding var showingEditTaskView: Bool
     @ObservedObject var task: Task
     @ObservedObject var activeDate: TaskDate
@@ -151,7 +152,10 @@ struct TaskView: View {
         ZStack(alignment: .top) {
             TaskRect(priorityColor: priorityColor, task: task)
                 .onTapGesture {
-                    withAnimation(.easeOut(duration: 0.25)) {
+                    withAnimation(.easeOut(duration: duration)) {
+                        for i in activeDate.taskArray where task.id != i.id {
+                            i.isExpanded = false
+                        }
                         task.isExpanded.toggle()
                     }
                 }
@@ -182,7 +186,7 @@ struct TaskView: View {
                         .padding(.leading, 10)
                         .padding(.trailing, 3)
                         .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                        .animation(.easeOut(duration: 0.25))
+                        .animation(.easeOut(duration: duration))
                     }
                     .animation(.none)
                     Spacer()
@@ -232,7 +236,7 @@ struct TaskView: View {
                     }
                     .opacity(task.isExpanded ? 1 : 0)
                     .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                    .animation(.easeOut(duration: 0.25))
+                    .animation(.easeOut(duration: duration))
                     
                     HStack {
                         NavigationLink(
@@ -250,7 +254,7 @@ struct TaskView: View {
                     .padding(.horizontal)
                     .padding(.vertical, 19)
                     .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                    .animation(.easeOut(duration: 0.25))
+                    .animation(.easeOut(duration: duration))
                 }
             }
         }

@@ -18,10 +18,6 @@ struct ContentView: View {
     @ObservedObject var taskDate: TaskDate = TaskDate(isActive: true)
     @ObservedObject var taskDateTwo: TaskDate = TaskDate(isActive: false)
     
-    //@State var dateArrayTest: [TaskDate] = []
-    
-    //var task: Task = Task()
-    
     static let taskDateFormat: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
@@ -36,26 +32,16 @@ struct ContentView: View {
         return nextDate ?? Date()
     }()
     
-    func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
-        var isActive: TaskDate = TaskDate(isActive: false)
-        for i in dateArray where i.isActive == true {
-            isActive = i
-        }
-        return isActive
-    }
-    
     var body: some View {
         
         let dateArray: [TaskDate] = [taskDate, taskDateTwo]
-        let activeDate = taskDateIsActive(dateArray: dateArray)
+        let activeDate = taskDate.taskDateIsActive(dateArray: dateArray)
         
         NavigationView {
             VStack(alignment: .center) {
-                
                 VStack {
                     HStack {
-                        
-                        DateText(date: ContentView.taskDateFormat.string(from: taskDateIsActive(dateArray: dateArray).date))
+                        DateText(date: ContentView.taskDateFormat.string(from: taskDate.taskDateIsActive(dateArray: dateArray).date))
                         Spacer()
                         OptionsButton()
                     }
@@ -69,9 +55,8 @@ struct ContentView: View {
                                             i.isActive = false
                                         }
                                         date.isActive.toggle()
+                                        taskDate.minimizeTask(dateArray: dateArray)
                                     })
-                                
-                                
                             }
                         }
                         .padding()
@@ -90,6 +75,7 @@ struct ContentView: View {
                                     showingHomeView = true
                                     homeButtonColor = Color("DateBackgroundChosen")
                                     listButtonColor = Color("DateBackground")
+                                    taskDate.minimizeTask(dateArray: dateArray)
                                 }
                                 .padding(.trailing, 10)
                             listViewButton(icon: "list.bullet", color: listButtonColor)
@@ -97,6 +83,8 @@ struct ContentView: View {
                                     showingHomeView = false
                                     homeButtonColor = Color("DateBackground")
                                     listButtonColor = Color("DateBackgroundChosen")
+                                    taskDate.minimizeTask(dateArray: dateArray)
+
                                 }
                         }
                     }
@@ -104,7 +92,7 @@ struct ContentView: View {
                     .padding(.horizontal)
                     HStack {
                         ForEach(0...8, id: \.self) { position in
-                            TaskTracker(activeDate: taskDateIsActive(dateArray: dateArray), position: position)
+                            TaskTracker(activeDate: taskDate.taskDateIsActive(dateArray: dateArray), position: position)
                         }
                     }
                     .padding(.horizontal)
@@ -159,7 +147,6 @@ struct ContentView: View {
                         if taskArrayMedium.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "Medium Priority")
-                                    //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(taskArrayMedium) { task in
                                     TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, activeDate: activeDate)
@@ -184,9 +171,7 @@ struct ContentView: View {
                         }
                     }
                     .padding(.bottom)
-                    //.animation(.easeInOut)
                 }
-                
                 ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
                     Rectangle()
                         .frame(height: 60)
@@ -198,7 +183,7 @@ struct ContentView: View {
                         .foregroundColor(Color("LightDarkModeBackground"))
                         .overlay (
                             NavigationLink(
-                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: .init(), taskDate: taskDateIsActive(dateArray: dateArray), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "")),
+                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: .init(), taskDate: taskDate.taskDateIsActive(dateArray: dateArray), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "")),
                                 isActive: $showingNewTaskView,
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
@@ -207,6 +192,11 @@ struct ContentView: View {
                                 })
                                 .padding(.horizontal)
                         )
+                        .onDisappear(perform: {
+                            for i in taskDate.taskDateIsActive(dateArray: dateArray).taskArray where i.isExpanded == true && showingNewTaskView == true {
+                                i.isExpanded = false
+                            }
+                        })
                     
                 }
                 
