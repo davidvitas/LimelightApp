@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct NewTaskView: View {
+    var taskHeaderTitle: String
+    var taskButtonText: String
     @State var addTaskDisabled = true
     @Binding var showingNewTaskView: Bool
+    @Binding var showingEditTaskView: Bool
     @ObservedObject var task: Task
     @ObservedObject var taskDate: TaskDate
-    @ObservedObject var taskTitle = TextLimiter(limit: 25)
-    @ObservedObject var taskDescription = TextLimiter(limit: 110)
+    @ObservedObject var taskTitle: TextLimiter
+    @ObservedObject var taskDescription: TextLimiter
     
-    
+    //    TextLimiter(limit: 110)
     func enableAddTask() -> Bool {
         if task.title.isEmpty == false && task.description.isEmpty == false && task.priority != nil && task.complete != nil && task.category != nil {
             addTaskDisabled = false
@@ -30,10 +33,12 @@ struct NewTaskView: View {
                 Rectangle()
                     .foregroundColor(Color("TaskButton"))
                     .cornerRadius(40, corners: [.bottomLeft, .bottomRight])
-                
-                NewTaskHeader(taskTitle: taskTitle, buttonAction: {
-                    showingNewTaskView = false
-                }, task: task)
+                if showingNewTaskView {
+                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, circleIconName: "x.circle", taskTitle: taskTitle, buttonAction: {
+                                    showingNewTaskView = false }, task: task)
+                } else {
+                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, circleIconName: "", taskTitle: taskTitle, task: task)
+                }
             }
             .frame(height: 275)
             
@@ -71,15 +76,12 @@ struct NewTaskView: View {
                         .onTapGesture(perform: {
                             task.priority = task.priority == .high ? nil : .high
                             task.colorChangePriority()
-                            
                         })
                     Spacer()
                     NewTaskButton(text: "Medium", buttonColor: task.buttonColorMedium, textColor: task.textColorMedium)
                         .onTapGesture(perform: {
                             task.priority = task.priority == .medium ? nil : .medium
                             task.colorChangePriority()
-                            
-                            
                         })
                     Spacer()
                     NewTaskButton(text: "Low", buttonColor: task.buttonColorLow, textColor: task.textColorLow)
@@ -132,24 +134,35 @@ struct NewTaskView: View {
                 .padding(.horizontal)
             }
             .padding(.vertical)
-            VStack {
-                
-                TaskButton(text: "Add Task", buttonAction: {
-                    //                    taskTitle = task.title
-                    //                    taskDescription = task.description
-                    task.colorAssign()
-                    taskDate.taskArray.append(task)
-                    showingNewTaskView = false
-                    addTaskDisabled = true
-                })
+            if showingNewTaskView {
+                VStack {
+                    TaskButton(text: taskButtonText, buttonAction: {
+                        task.colorAssign()
+                        taskDate.taskArray.append(task)
+                        showingNewTaskView = false
+                        addTaskDisabled = true
+                    })
+                    .padding()
+                    .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
+                    .animation(.easeOut(duration: 0.25))
+                    .buttonStyle(PlainButtonStyle())
+                }
                 .padding()
-                .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
-                .animation(.easeOut)
-                .buttonStyle(PlainButtonStyle())
-                
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+            } else {
+                VStack {
+                    TaskButton(text: taskButtonText, buttonAction: {
+                        task.colorAssign()
+                        showingEditTaskView = false
+                    })
+                    .padding()
+                    .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
+                    .animation(.easeOut(duration: 0.25))
+                    .buttonStyle(PlainButtonStyle())
+                }
+                .padding()
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
             }
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
         }
         .edgesIgnoringSafeArea(.top)
         .navigationBarTitle("")
@@ -158,9 +171,12 @@ struct NewTaskView: View {
     }
     
     
+    
 }
 
 struct NewTaskHeader: View {
+    var taskHeaderTitle: String
+    var circleIconName: String
     @ObservedObject var taskTitle: TextLimiter
     var buttonAction = {}
     var task: Task
@@ -168,19 +184,17 @@ struct NewTaskHeader: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .lastTextBaseline) {
-                TaskHeader(text: "Create New Task")
+                TaskHeader(text: taskHeaderTitle)
                     .padding(.top)
                 Spacer()
                 Button(action: buttonAction ) {
-                    Image(systemName: "x.circle")
+                    Image(systemName: circleIconName)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 32, height: 32)
                         .foregroundColor(Color("PriorityTextHeader"))
                 }
             }
-            
-            
             TaskTitle(text: "Task Title")
                 .padding(.top, 30)
             ZStack(alignment: .leading) {
@@ -190,7 +204,7 @@ struct NewTaskHeader: View {
                 TextField("", text: $taskTitle.value)
                     .onChange(of: taskTitle.value, perform: { value in
                         task.title = taskTitle.value
-                    })  
+                    })
             }
             .padding(.top, 13)
             Divider()
@@ -204,8 +218,8 @@ struct NewTaskHeader: View {
 
 struct NewTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        NewTaskView(showingNewTaskView: .constant(true), task: Task(), taskDate: TaskDate(isActive: false))
-        NewTaskView(showingNewTaskView: .constant(true), task: Task(), taskDate: TaskDate(isActive: false))
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskDate: TaskDate(isActive: false), taskTitle: TextLimiter(limit: 25, value: "123"), taskDescription: TextLimiter(limit: 110, value: "123"))
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskDate: TaskDate(isActive: false), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "1223"))
             .preferredColorScheme(.dark)
     }
 }
@@ -217,7 +231,7 @@ extension View {
     }
 }
 
-
+// Struct used inside extension
 struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners

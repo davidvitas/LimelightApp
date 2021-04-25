@@ -29,7 +29,8 @@ class TextLimiter: ObservableObject, Equatable {
     
     @Published var hasReachedLimit = false
     
-    init(limit: Int) {
+    init(limit: Int, value: String) {
         self.limit = limit
+        self.value = value
     }
 }

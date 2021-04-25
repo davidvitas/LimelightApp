@@ -143,6 +143,7 @@ struct TaskView: View {
     var complete: String
     var priorityColor: Color
     var description: String
+    @Binding var showingEditTaskView: Bool
     @ObservedObject var task: Task
     @ObservedObject var activeDate: TaskDate
     
@@ -156,16 +157,16 @@ struct TaskView: View {
                 }
             VStack {
                 HStack(alignment: .center) {
-                        Button(action: {
-                            task.isComplete.toggle()
-                            if task.isComplete {
-                                activeDate.taskCompletedAmount += 1
-                            } else {
-                                activeDate.taskCompletedAmount -= 1
-                            }
-                            
-                        }) {
-                            ZStack {
+                    Button(action: {
+                        task.isComplete.toggle()
+                        if task.isComplete {
+                            activeDate.taskCompletedAmount += 1
+                        } else {
+                            activeDate.taskCompletedAmount -= 1
+                        }
+                        
+                    }) {
+                        ZStack {
                             Circle()
                                 .stroke(priorityColor, lineWidth: 2.0)
                                 .frame(width: 32, height: 32)
@@ -180,10 +181,10 @@ struct TaskView: View {
                         .frame(width: 50, height: 77, alignment: .trailing)
                         .padding(.leading, 10)
                         .padding(.trailing, 3)
-                            .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                            .animation(.easeOut(duration: 0.25))
-                        }
-                        .animation(.none)
+                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                        .animation(.easeOut(duration: 0.25))
+                    }
+                    .animation(.none)
                     Spacer()
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
@@ -210,41 +211,46 @@ struct TaskView: View {
                     .padding(.trailing)
                 }
                 if task.isExpanded {
-                        HStack {
-                            HStack(alignment: .center) {
-                                VStack {}
-                                    .frame(width: 50)
-                                    .padding(.leading, 10)
-                                    .padding(.trailing, 3)
-                                Spacer()
-                                
-                                VStack(alignment: .leading, spacing: 0) {
-                                    HStack {
-                                        Spacer()
-                                    }
-                                    DescriptionText(text: description)
-                                }
+                    HStack {
+                        HStack(alignment: .center) {
+                            VStack {}
+                                .frame(width: 50)
                                 .padding(.leading, 10)
-                                .padding(.trailing)
-                                .lineLimit(3)
+                                .padding(.trailing, 3)
+                            Spacer()
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                HStack {
+                                    Spacer()
+                                }
+                                DescriptionText(text: description)
                             }
+                            .padding(.leading, 10)
+                            .padding(.trailing)
+                            .lineLimit(3)
                         }
-                        .opacity(task.isExpanded ? 1 : 0)
-                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                        .animation(.easeOut(duration: 0.25))
-
-                        HStack {
-                            TaskEditButton(text: "Edit", buttonAction: {
-                                activeDate.removeTask(activeDate: activeDate, activeTask: task)
+                    }
+                    .opacity(task.isExpanded ? 1 : 0)
+                    .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                    .animation(.easeOut(duration: 0.25))
+                    
+                    HStack {
+                        NavigationLink(
+                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskDate: activeDate, taskTitle: TextLimiter(limit: 25, value: task.title), taskDescription: TextLimiter(limit: 110, value: task.description)),
+                            isActive: $showingEditTaskView,
+                            label: {
+                                TaskEditButton(text: "Edit", buttonAction: {
+                                    showingEditTaskView = true
+                                })
                             })
-                            TaskEditButton(text: "Delete", buttonAction: {
-                                activeDate.removeTask(activeDate: activeDate, activeTask: task)
-                            })
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 19)
-                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
-                        .animation(.easeOut(duration: 0.25))
+                        TaskEditButton(text: "Delete", buttonAction: {
+                            activeDate.removeTask(activeDate: activeDate, activeTask: task)
+                        })
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 19)
+                    .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                    .animation(.easeOut(duration: 0.25))
                 }
             }
         }
@@ -400,7 +406,7 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", task: Task(), activeDate: TaskDate(isActive: false))
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), activeDate: TaskDate(isActive: false))
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
         }
     }

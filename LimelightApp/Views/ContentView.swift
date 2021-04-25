@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var showingNewTaskView = false
+    @State private var showingEditTaskView = false
     @State private var showingHomeView = false
     
     @State var homeButtonColor: Color = Color("DateBackground")
@@ -147,7 +148,7 @@ struct ContentView: View {
                                 ListHeader(text: "High Priority")
                                     .padding(.horizontal)
                                 ForEach(taskArrayHigh) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, task: task, activeDate: activeDate)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
@@ -161,7 +162,7 @@ struct ContentView: View {
                                     //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(taskArrayMedium) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, task: task, activeDate: activeDate)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
@@ -174,7 +175,7 @@ struct ContentView: View {
                                 ListHeader(text: "Low Priority")
                                     .padding(.horizontal)
                                 ForEach(taskArrayLow) { task in
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, task: task, activeDate: activeDate)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, activeDate: activeDate)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
@@ -197,7 +198,7 @@ struct ContentView: View {
                         .foregroundColor(Color("LightDarkModeBackground"))
                         .overlay (
                             NavigationLink(
-                                destination: NewTaskView(showingNewTaskView: $showingNewTaskView, task: .init(), taskDate: taskDateIsActive(dateArray: dateArray)),
+                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: .init(), taskDate: taskDateIsActive(dateArray: dateArray), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "")),
                                 isActive: $showingNewTaskView,
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
