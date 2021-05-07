@@ -117,10 +117,10 @@ class TaskDate: ObservableObject, Identifiable {
         return nextDate
     }
     
-    func taskTrackerColor (onArray: [Task], position: Int) -> Color { // two params, array and position (which dash line from 0 - 8)
+    func taskTrackerColor (onArray: [Task], position: Int) -> String { // two params, array and position (which dash line from 0 - 8)
         var array = taskArrayIsComplete(onArray: onArray, completed: true) // helper function that returns an array of completed tasks
-        var colorString: String = "TaskButton" // variable to store color
-        let color: Color = Color(colorString) // variable to store color
+        //var colorString: String = "TaskButton" // variable to store color
+        var color: String = "TaskButton" // variable to store color
 
         
         array.sort {
@@ -133,10 +133,10 @@ class TaskDate: ObservableObject, Identifiable {
         case 0...8:
             
             if array.isEmpty == false && validIndex == true {
-                colorString = array[position].color
+                color = array[position].color
             }
             
-        default: colorString = "TaskButton"
+        default: color = "TaskButton"
             
         }
         

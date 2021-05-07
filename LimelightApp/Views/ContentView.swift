@@ -35,15 +35,15 @@ struct ContentView: View {
     
     func addDate() {
         
-        var isEmpty: Bool {
-            do {
-                let request = NSFetchRequest<TaskDateData>(entityName: "TaskDateData")
-                let count  = try managedObjectContext.count(for: request)
-                return count == 0
-            } catch {
-                return true
-            }
-        }
+        //        var isEmpty: Bool {
+        //            do {
+        //                let request = NSFetchRequest<TaskDateData>(entityName: "TaskDateData")
+        //                let count  = try managedObjectContext.count(for: request)
+        //                return count == 0
+        //            } catch {
+        //                return true
+        //            }
+        //        }
         
         if dates.isEmpty == true {
             let newDate = TaskDateData(context: managedObjectContext)
@@ -53,7 +53,6 @@ struct ContentView: View {
             newDate.isActive = taskDate.isActive
             PersistenceController.shared.save()
         }
-        
         
         PersistenceController.shared.save()
         
@@ -73,13 +72,13 @@ struct ContentView: View {
         return nextDate ?? Date()
     }()
     
-                        var activeDateDataHigh: [TaskData] {
-                            var array: [TaskData] = []
-                            for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
-                                array.append(i)
-                            }
-                            return array
-                        }
+    var activeDateDataHigh: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
+            array.append(i)
+        }
+        return array
+    }
     
     var activeDateDataMedium: [TaskData] {
         var array: [TaskData] = []
@@ -157,8 +156,8 @@ struct ContentView: View {
                     .padding(.horizontal)
                     HStack {
                         ForEach(0...8, id: \.self) { position in
-                            let activeDateMap = activeDateData.map { taskDate in
-                                TaskDate(taskDateData: taskDate)
+                            let activeDateMap = activeDateData.map { taskDateData in
+                                TaskDate(taskDateData: taskDateData)
                             }
                             TaskTracker(activeDate: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap), position: position)
                         }
@@ -184,13 +183,13 @@ struct ContentView: View {
                     let taskArrayLow =
                         activeDateMap.first?.taskArrayPriority(priority: .low)
                     
-//                    var activeDateDataHigh: [TaskData] {
-//                        let array: [TaskData] = []
-//                        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
-//                            array.append(i)
-//                        }
-//                        return array
-//                    }
+                    //                    var activeDateDataHigh: [TaskData] {
+                    //                        let array: [TaskData] = []
+                    //                        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
+                    //                            array.append(i)
+                    //                        }
+                    //                        return array
+                    //                    }
                     
                     if taskArrayHigh?.isEmpty == true && taskArrayMedium?.isEmpty == true && taskArrayLow?.isEmpty == true {
                         Spacer()
@@ -217,7 +216,7 @@ struct ContentView: View {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "High Priority")
                                     .padding(.horizontal)
-
+                                
                                 ForEach(activeDateDataHigh) { taskData in
                                     let task = Task(coreData: taskData)
                                     TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData)
@@ -239,8 +238,8 @@ struct ContentView: View {
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                 }
+                                .animation(.easeOut(duration: 0.25))
                             }
-                            .animation(.easeOut(duration: 0.25))
                             .padding(.bottom, 40)
                         }
                         if taskArrayLow?.isEmpty == false {

@@ -168,20 +168,22 @@ struct TaskView: View {
                             }
                             taskData.isExpanded.toggle()
                             PersistenceController.shared.save()
+                            managedObjectContext.refreshAllObjects()
                         }
                     }
                 }
             VStack {
                 HStack(alignment: .center) {
                     Button(action: {
-                        task.isComplete.toggle()
+                        taskData.isComplete.toggle()
+                        PersistenceController.shared.save()
                         
                     }) {
                         ZStack {
                             Circle()
                                 .stroke(priorityColor, lineWidth: 2.0)
                                 .frame(width: 32, height: 32)
-                            if task.isComplete {
+                            if taskData.isComplete {
                                 Circle()
                                     .frame(width: 32, height: 32)
                                     .foregroundColor(priorityColor)
@@ -255,6 +257,7 @@ struct TaskView: View {
                                 })
                             })
                         TaskEditButton(text: "Delete", buttonAction: {
+                            taskData.color = "TaskButton"
                             activeDateData.first?.removeFromTaskArraySet(taskData)
                             PersistenceController.shared.save()
                         })
@@ -376,19 +379,56 @@ struct NewTaskButton: View {
 }
 
 struct TaskTracker: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @ObservedObject var activeDate: TaskDate
     var position: Int
     
+    @FetchRequest(
+        entity: TaskData.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \TaskData.dateCreated, ascending: true)
+        ], predicate: NSPredicate(format: "isComplete = %d", true)
+    ) var isCompleteTaskData: FetchedResults<TaskData>
+    
+    func taskDataTrackerColor (onArray: FetchedResults<TaskData>, position: Int) -> String { // two params, array and position (which dash line from 0 - 8)
+        var array: [TaskData] = [] // helper function that returns an array of completed tasks
+        for i in onArray {
+            array.append(i)
+        }
+        //var colorString: String = "TaskButton" // variable to store color
+        var color: String = "TaskButton" // variable to store color
+
+        array.sort {
+            $0.priority < $1.priority // sorts the array based on high/medium/low priority
+        }
+        
+        let validIndex = array.indices.contains(position) // checks if index exists
+        
+        switch position { // switches on the dash position
+        case 0...8:
+            
+            if array.isEmpty == false && validIndex == true {
+                color = array[position].color
+            }
+            
+        default: color = "TaskButton"
+            
+        }
+        
+        return color // returns correct color
+        
+    }
+    
     var body: some View {
         
-        let taskTrackerColor = activeDate.taskTrackerColor(onArray: activeDate.taskArray, position: position)
+        //let taskTrackerColor = activeDate.taskTrackerColor(onArray: activeDate.taskArray, position: position)
+        let taskTrackerColor = taskDataTrackerColor(onArray: isCompleteTaskData, position: position)
         
         Rectangle()
             .frame(height: 8)
             .cornerRadius(8)
-            .foregroundColor(taskTrackerColor)
+            .foregroundColor(Color(taskTrackerColor))
             .animation(.easeIn(duration: 0.1))
-        
     }
 }
 
