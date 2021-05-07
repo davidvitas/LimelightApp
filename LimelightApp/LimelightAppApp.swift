@@ -9,10 +9,18 @@ import SwiftUI
 
 @main
 struct LimelightAppApp: App {
+    @Environment(\.scenePhase) var scenePhase
+    
+    let persistenceController = PersistenceController.shared
     
     var body: some Scene {
         WindowGroup {
-            ContentView(taskDate: TaskDate(isActive: true))
+            ContentView().environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
+        .onChange(of: scenePhase) { _ in
+            persistenceController.save()
+        }
+        
+        
     }
 }

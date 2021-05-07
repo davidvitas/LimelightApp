@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H524" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="TaskData" representedClassName="TaskData" syncable="YES">
+        <attribute name="buttonColorEndOfDay" attributeType="String"/>
+        <attribute name="buttonColorHigh" attributeType="String"/>
+        <attribute name="buttonColorHome" attributeType="String"/>
+        <attribute name="buttonColorLow" attributeType="String"/>
+        <attribute name="buttonColorMedium" attributeType="String"/>
+        <attribute name="buttonColorWithin24Hours" attributeType="String"/>
+        <attribute name="buttonColorWork" attributeType="String"/>
+        <attribute name="category" attributeType="String"/>
+        <attribute name="categorySquareHome" attributeType="String"/>
+        <attribute name="categorySquareWork" attributeType="String"/>
+        <attribute name="color" attributeType="String"/>
+        <attribute name="complete" attributeType="String"/>
+        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="didMove" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isComplete" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isExpanded" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="priority" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="taskDescription" attributeType="String"/>
+        <attribute name="textColorEndOfDay" attributeType="String"/>
+        <attribute name="textColorHigh" attributeType="String"/>
+        <attribute name="textColorHome" attributeType="String"/>
+        <attribute name="textColorLow" attributeType="String"/>
+        <attribute name="textColorMedium" attributeType="String"/>
+        <attribute name="textColorWithin24Hours" attributeType="String"/>
+        <attribute name="textColorWork" attributeType="String"/>
+        <attribute name="title" attributeType="String"/>
+        <relationship name="taskDateArray" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskDateData" inverseName="taskArraySet" inverseEntity="TaskDateData"/>
+    </entity>
+    <entity name="TaskDateData" representedClassName="TaskDateData" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="taskArraySet" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TaskData" inverseName="taskDateArray" inverseEntity="TaskData"/>
+    </entity>
+    <elements>
+        <element name="Item" positionX="-63" positionY="-18" width="128" height="58"/>
+        <element name="TaskData" positionX="-63" positionY="-9" width="128" height="463"/>
+        <element name="TaskDateData" positionX="-54" positionY="0" width="128" height="103"/>
+    </elements>
+</model>

@@ -14,140 +14,35 @@ class Task: ObservableObject, Identifiable {
     var dateCreated: Date
     var title: String
     var description: String
-    var color: Color = Color("TaskButton")
+    var color: String = "TaskButton"
     @Published var priority: Priority?
     @Published var complete: Complete?
     @Published var category: Category?
     @Published var isComplete: Bool = false
     @Published var isExpanded: Bool = false
+    @Published var didMove: Bool = false
     
+    var buttonColorHigh: String = "TaskButton"
+    var buttonColorMedium: String = "TaskButton"
+    var buttonColorLow: String = "TaskButton"
+    var buttonColorEndOfDay: String = "TaskButton"
+    var buttonColorWithin24Hours: String = "TaskButton"
     
-    var buttonColorHigh: Color = Color("TaskButton")
-    var buttonColorMedium: Color = Color("TaskButton")
-    var buttonColorLow: Color = Color("TaskButton")
-    var buttonColorEndOfDay: Color = Color("TaskButton")
-    var buttonColorWithin24Hours: Color = Color("TaskButton")
+    var buttonColorHome: String = "TaskButton"
+    var buttonColorWork: String = "TaskButton"
     
-    var buttonColorHome: Color = Color("TaskButton")
-    var buttonColorWork: Color = Color("TaskButton")
+    var textColorHigh: String = "RemainingText"
+    var textColorMedium: String = "RemainingText"
+    var textColorLow: String = "RemainingText"
     
-    var textColorHigh: Color = Color("RemainingText")
-    var textColorMedium: Color = Color("RemainingText")
-    var textColorLow: Color = Color("RemainingText")
+    var textColorWithin24Hours: String = "RemainingText"
+    var textColorEndOfDay: String = "RemainingText"
     
-    var textColorWithin24Hours: Color = Color("RemainingText")
-    var textColorEndOfDay: Color = Color("RemainingText")
+    var textColorHome: String = "RemainingText"
+    var textColorWork: String = "RemainingText"
     
-    var textColorHome: Color = Color("RemainingText")
-    var textColorWork: Color = Color("RemainingText")
-    
-    var categorySquareHome: Color = Color("CategorySquare")
-    var categorySquareWork: Color = Color("CategorySquare")
-
-    
-    init(dateCreated: Date = Date(), title: String = "", description: String = "", priority: Priority? = nil, complete: Complete? = nil, category: Category? = nil) {
-        self.dateCreated = dateCreated
-        self.title = title
-        self.description = description
-        self.priority = priority
-        self.complete = complete
-        self.category = category
-    }
-    
-    func colorAssign() {
-        if priority == .high {
-            color = Color("HighPriority")
-        } else if priority == .medium {
-            color = Color("MediumPriority")
-        } else if priority == .low {
-            color = Color("LowPriority")
-        }
-    }
-    
-    func colorChangePriority() {
-        switch priority {
-        case .high:
-            buttonColorHigh = Color("HighPriority")
-            buttonColorMedium = Color("TaskButton")
-            buttonColorLow = Color("TaskButton")
-            textColorHigh = Color("DateText")
-            textColorMedium = Color("RemainingText")
-            textColorLow = Color("RemainingText")
-        case .medium:
-            buttonColorMedium = Color("MediumPriority")
-            buttonColorHigh = Color("TaskButton")
-            buttonColorLow = Color("TaskButton")
-            textColorHigh = Color("RemainingText")
-            textColorMedium = Color("DateText")
-            textColorLow = Color("RemainingText")
-        case .low:
-            buttonColorLow = Color("LowPriority")
-            buttonColorMedium = Color("TaskButton")
-            buttonColorHigh = Color("TaskButton")
-            textColorHigh = Color("RemainingText")
-            textColorMedium = Color("RemainingText")
-            textColorLow = Color("DateText")
-            
-        case nil:
-            buttonColorHigh = Color("TaskButton")
-            buttonColorMedium = Color("TaskButton")
-            buttonColorLow = Color("TaskButton")
-            textColorHigh = Color("RemainingText")
-            textColorMedium = Color("RemainingText")
-            textColorLow = Color("RemainingText")
-        }
-    }
-    
-    func colorChangeComplete() {
-        switch complete {
-        
-        case .endOfDay:
-            buttonColorEndOfDay = Color("TaskButtonChosen")
-            textColorEndOfDay = Color("TaskButtonTextChosen")
-            buttonColorWithin24Hours = Color("TaskButton")
-            textColorWithin24Hours = Color("RemainingText")
-            
-        case .within24Hours:
-            buttonColorWithin24Hours = Color("TaskButtonChosen")
-            textColorWithin24Hours = Color("TaskButtonTextChosen")
-            buttonColorEndOfDay = Color("TaskButton")
-            textColorEndOfDay = Color("RemainingText")
-        case nil:
-            buttonColorEndOfDay = Color("TaskButton")
-            textColorEndOfDay = Color("RemainingText")
-            buttonColorWithin24Hours = Color("TaskButton")
-            textColorWithin24Hours = Color("RemainingText")
-        }
-    }
-    
-    func colorChangeCategory() {
-        switch category {
-        
-        case .home:
-            buttonColorHome = Color("TaskButtonChosen")
-            textColorHome = Color("TaskButtonTextChosen")
-            buttonColorWork = Color("TaskButton")
-            textColorWork = Color("RemainingText")
-            categorySquareHome = Color("CategorySquareChosen")
-            categorySquareWork = Color("CategorySquare")
-            
-        case .work:
-            buttonColorWork = Color("TaskButtonChosen")
-            textColorWork = Color("TaskButtonTextChosen")
-            buttonColorHome = Color("TaskButton")
-            textColorHome = Color("RemainingText")
-            categorySquareHome = Color("CategorySquare")
-            categorySquareWork = Color("CategorySquareChosen")
-
-        case nil:
-            buttonColorHome = Color("TaskButton")
-            buttonColorWork = Color("TaskButton")
-            textColorHome = Color("RemainingText")
-            textColorWork = Color("RemainingText")
-            categorySquareHome = Color("CategorySquare")
-            categorySquareWork = Color("CategorySquare")
-        }
-    }
+    var categorySquareHome: String = "CategorySquare"
+    var categorySquareWork: String = "CategorySquare"
     
     enum Priority: Int {
         
@@ -164,6 +59,138 @@ class Task: ObservableObject, Identifiable {
     enum Category: String {
         case home
         case work
+    }
+    
+    
+    init(dateCreated: Date = Date(), title: String = "", description: String = "", priority: Priority? = nil, complete: Complete? = nil, category: Category? = nil) {
+        self.dateCreated = dateCreated
+        self.title = title
+        self.description = description
+    }
+    
+    init(coreData: TaskData) {
+        self.dateCreated = coreData.dateCreated
+        self.id = coreData.id
+        self.description = coreData.taskDescription
+        self.title = coreData.title
+        self.color = coreData.color
+        self.priority = Task.Priority(rawValue: Int(coreData.priority))
+        self.complete = Task.Complete(rawValue: coreData.complete ?? "")
+        self.category = Task.Category(rawValue: coreData.category ?? "")
+        self.isComplete = coreData.isComplete
+        self.isExpanded = coreData.isExpanded
+        self.didMove = coreData.didMove
+        self.buttonColorHigh = coreData.buttonColorHigh
+        self.buttonColorMedium = coreData.buttonColorMedium
+        self.buttonColorLow = coreData.buttonColorLow
+        self.buttonColorEndOfDay = coreData.buttonColorEndOfDay
+        self.buttonColorWithin24Hours = coreData.buttonColorWithin24Hours
+        self.buttonColorHome = coreData.buttonColorHome
+        self.buttonColorWork = coreData.buttonColorWork
+        self.textColorHigh = coreData.textColorHigh
+        self.textColorMedium = coreData.textColorMedium
+        self.textColorLow = coreData.textColorLow
+        self.textColorWithin24Hours = coreData.textColorWithin24Hours
+        self.textColorEndOfDay = coreData.textColorEndOfDay
+        self.textColorHome = coreData.textColorHome
+        self.textColorWork = coreData.textColorWork
+        self.categorySquareHome = coreData.categorySquareHome
+        self.categorySquareWork = coreData.categorySquareWork
+    }
+    
+    func colorAssign() {
+        if priority == .high {
+            color = "HighPriority"
+        } else if priority == .medium {
+            color = "MediumPriority"
+        } else if priority == .low {
+            color = "LowPriority"
+        }
+    }
+    
+    func colorChangePriority() {
+        switch priority {
+        case .high:
+            buttonColorHigh = "HighPriority"
+            buttonColorMedium = "TaskButton"
+            buttonColorLow = "TaskButton"
+            textColorHigh = "DateText"
+            textColorMedium = "RemainingText"
+            textColorLow = "RemainingText"
+        case .medium:
+            buttonColorMedium = "MediumPriority"
+            buttonColorHigh = "TaskButton"
+            buttonColorLow = "TaskButton"
+            textColorHigh = "RemainingText"
+            textColorMedium = "DateText"
+            textColorLow = "RemainingText"
+        case .low:
+            buttonColorLow = "LowPriority"
+            buttonColorMedium = "TaskButton"
+            buttonColorHigh = "TaskButton"
+            textColorHigh = "RemainingText"
+            textColorMedium = "RemainingText"
+            textColorLow = "DateText"
+            
+        case nil:
+            buttonColorHigh = "TaskButton"
+            buttonColorMedium = "TaskButton"
+            buttonColorLow = "TaskButton"
+            textColorHigh = "RemainingText"
+            textColorMedium = "RemainingText"
+            textColorLow = "RemainingText"
+        }
+    }
+    
+    func colorChangeComplete() {
+        switch complete {
+        
+        case .endOfDay:
+            buttonColorEndOfDay = "TaskButtonChosen"
+            textColorEndOfDay = "TaskButtonTextChosen"
+            buttonColorWithin24Hours = "TaskButton"
+            textColorWithin24Hours = "RemainingText"
+            
+        case .within24Hours:
+            buttonColorWithin24Hours = "TaskButtonChosen"
+            textColorWithin24Hours = "TaskButtonTextChosen"
+            buttonColorEndOfDay = "TaskButton"
+            textColorEndOfDay = "RemainingText"
+        case nil:
+            buttonColorEndOfDay = "TaskButton"
+            textColorEndOfDay = "RemainingText"
+            buttonColorWithin24Hours = "TaskButton"
+            textColorWithin24Hours = "RemainingText"
+        }
+    }
+    
+    func colorChangeCategory() {
+        switch category {
+        
+        case .home:
+            buttonColorHome = "TaskButtonChosen"
+            textColorHome = "TaskButtonTextChosen"
+            buttonColorWork = "TaskButton"
+            textColorWork = "RemainingText"
+            categorySquareHome = "CategorySquareChosen"
+            categorySquareWork = "CategorySquare"
+            
+        case .work:
+            buttonColorWork = "TaskButtonChosen"
+            textColorWork = "TaskButtonTextChosen"
+            buttonColorHome = "TaskButton"
+            textColorHome = "RemainingText"
+            categorySquareHome = "CategorySquare"
+            categorySquareWork = "CategorySquareChosen"
+
+        case nil:
+            buttonColorHome = "TaskButton"
+            buttonColorWork = "TaskButton"
+            textColorHome = "RemainingText"
+            textColorWork = "RemainingText"
+            categorySquareHome = "CategorySquare"
+            categorySquareWork = "CategorySquare"
+        }
     }
     
 }

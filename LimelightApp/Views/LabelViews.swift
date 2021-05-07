@@ -37,7 +37,6 @@ struct DateView: View {
 }
 
 struct NewDateView: View {
-    
     var body: some View {
         Rectangle()
             .frame(width: 64, height: 72)
@@ -59,12 +58,10 @@ struct NewDateView: View {
 
 struct TaskRect: View {
     var priorityColor: Color
-    @ObservedObject var task: Task
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
             Rectangle()
-                //.frame(height: task.isExpanded ? 234 : 77)
                 .foregroundColor(Color("TaskRectangle"))
             Rectangle()
                 .frame(width: 8)
@@ -138,6 +135,7 @@ struct DashboardPriorityView: View {
 }
 
 struct TaskView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     var taskTitle: String
     var category: String
     var complete: String
@@ -146,28 +144,37 @@ struct TaskView: View {
     var duration: Double = 0.25
     @Binding var showingEditTaskView: Bool
     @ObservedObject var task: Task
-    @ObservedObject var activeDate: TaskDate
+    @ObservedObject var taskData: TaskData
+
+    @FetchRequest(
+        entity: TaskDateData.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
+        ], predicate: NSPredicate(format: "isActive = %d", true)
+    ) var activeDateData: FetchedResults<TaskDateData>
     
     var body: some View {
         ZStack(alignment: .top) {
-            TaskRect(priorityColor: priorityColor, task: task)
+            TaskRect(priorityColor: priorityColor)
                 .onTapGesture {
                     withAnimation(.easeOut(duration: duration)) {
-                        for i in activeDate.taskArray where task.id != i.id {
-                            i.isExpanded = false
+                        if let activeDateData = activeDateData.first?.taskArray {
+                            
+                            for i in activeDateData where taskData.id != i.id {
+                                i.isExpanded = false
+                                PersistenceController.shared.save()
+                                managedObjectContext.refreshAllObjects()
+                                
+                            }
+                            taskData.isExpanded.toggle()
+                            PersistenceController.shared.save()
                         }
-                        task.isExpanded.toggle()
                     }
                 }
             VStack {
                 HStack(alignment: .center) {
                     Button(action: {
                         task.isComplete.toggle()
-                        if task.isComplete {
-                            activeDate.taskCompletedAmount += 1
-                        } else {
-                            activeDate.taskCompletedAmount -= 1
-                        }
                         
                     }) {
                         ZStack {
@@ -228,10 +235,10 @@ struct TaskView: View {
                                     Spacer()
                                 }
                                 DescriptionText(text: description)
+                                    .lineLimit(3)
                             }
                             .padding(.leading, 10)
                             .padding(.trailing)
-                            .lineLimit(3)
                         }
                     }
                     .opacity(task.isExpanded ? 1 : 0)
@@ -240,7 +247,7 @@ struct TaskView: View {
                     
                     HStack {
                         NavigationLink(
-                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskDate: activeDate, taskTitle: TextLimiter(limit: 25, value: task.title), taskDescription: TextLimiter(limit: 110, value: task.description)),
+                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskTitle: TextLimiter(limit: 15, value: task.title), taskDescription: TextLimiter(limit: 100, value: task.description), taskData: taskData),
                             isActive: $showingEditTaskView,
                             label: {
                                 TaskEditButton(text: "Edit", buttonAction: {
@@ -248,7 +255,8 @@ struct TaskView: View {
                                 })
                             })
                         TaskEditButton(text: "Delete", buttonAction: {
-                            activeDate.removeTask(activeDate: activeDate, activeTask: task)
+                            activeDateData.first?.removeFromTaskArraySet(taskData)
+                            PersistenceController.shared.save()
                         })
                     }
                     .padding(.horizontal)
@@ -410,7 +418,7 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), activeDate: TaskDate(isActive: false))
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData())
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
         }
     }

@@ -14,10 +14,18 @@ class TaskDate: ObservableObject, Identifiable {
     @Published var date: Date = Date()
     @Published var taskArray: [Task] = []
     @Published var isActive: Bool
-    @Published var taskCompletedAmount = 0
-    
+
     init(isActive: Bool) {
         self.isActive = isActive
+    }
+    
+    init(taskDateData: TaskDateData) {
+        self.id = taskDateData.id
+        self.date = taskDateData.date
+        self.isActive = taskDateData.isActive
+        self.taskArray = taskDateData.taskArray.map { tasks in
+            Task(coreData: tasks as TaskData)
+        }
     }
     
     let shortDateFormatDay: DateFormatter = {
@@ -56,37 +64,64 @@ class TaskDate: ObservableObject, Identifiable {
         return array
     }
     
-//    func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
-//        var isActive: TaskDate!
-//        for i in dateArray where i.isActive == true {
-//            isActive = i
-//        }
-//        return isActive
-//    }
-    
     func minimizeTask(dateArray: [TaskDate]) {
-        for i in taskDateIsActive(dateArray: dateArray).taskArray where i.isExpanded == true{
+        for i in taskDateIsActive(taskDateDataArray: dateArray).taskArray where i.isExpanded == true{
             i.isExpanded = false
         }
     }
     
-    func taskDateIsActive(dateArray: [TaskDate]) -> TaskDate {
+    func taskDateIsActive(taskDateDataArray: [TaskDate]) -> TaskDate {
         var isActive: TaskDate = TaskDate(isActive: false)
-        for i in dateArray where i.isActive == true {
+        for i in taskDateDataArray where i.isActive == true {
             isActive = i
         }
         return isActive
     }
     
-    
-    
     func removeTask(activeDate: TaskDate, activeTask: Task) {
-        taskArray.removeAll() {$0.id == activeTask.id}
+        //withAnimation(.easeInOut(duration: 0.25)) {
+            taskArray.removeAll() {$0.id == activeTask.id}
+        //}
+    }
+    
+    func taskToMove(onActive: [Task], dateArray: [TaskDate]) {
+        var array: [Task] = []
+        
+        for i in taskArray where i.complete == .within24Hours && i.isComplete == false {
+            if Calendar.current.isDate(date, equalTo: i.dateCreated, toGranularity: .day) == false {
+                if i.didMove == false {
+                    i.didMove = true
+                    array.append(i)
+                    taskArray.removeAll() {$0.id == i.id}
+                    if array.isEmpty == false {
+                        for i in array {
+                            i.dateCreated = nextDay(date: i.dateCreated)
+                        }
+                        for date in array {
+                            for i in dateArray where date.dateCreated == i.date {
+                                i.taskArray.append(date)
+                            }
+                        }
+                        array.removeAll()
+                    }
+                }
+            }
+        }
+    }
+    
+    func nextDay(date: Date) -> Date {
+        var dayComponent = DateComponents()
+        dayComponent.day = 1 // For removing one day (yesterday): -1
+        let theCalendar = Calendar.current
+        let nextDate = theCalendar.date(byAdding: dayComponent, to: date) ?? Date()
+        return nextDate
     }
     
     func taskTrackerColor (onArray: [Task], position: Int) -> Color { // two params, array and position (which dash line from 0 - 8)
         var array = taskArrayIsComplete(onArray: onArray, completed: true) // helper function that returns an array of completed tasks
-        var color: Color = Color("TaskButton") // variable to store color
+        var colorString: String = "TaskButton" // variable to store color
+        let color: Color = Color(colorString) // variable to store color
+
         
         array.sort {
             $0.priority?.rawValue ?? 0 < $1.priority?.rawValue ?? 1 // sorts the array based on high/medium/low priority
@@ -98,11 +133,11 @@ class TaskDate: ObservableObject, Identifiable {
         case 0...8:
             
             if array.isEmpty == false && validIndex == true {
-                color = array[position].color
+                colorString = array[position].color
             }
-        
-        default: color = Color("TaskButton")
-        
+            
+        default: colorString = "TaskButton"
+            
         }
         
         return color // returns correct color
