@@ -25,21 +25,31 @@ struct NewTaskView: View {
             NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
         ], predicate: NSPredicate(format: "isActive = %d", true)
     ) var activeDateData: FetchedResults<TaskDateData>
+
+    var activeDateDataHigh: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
+            array.append(i)
+        }
+        return array
+    }
     
-    //    func fetchToTask(results: FetchedResults<TaskData>) -> [Task] {
-    //        var array: [Task] = []
-    //        for i in results {
-    //            let task: Task = Task()
-    //            task.title = i.title
-    //            task.description = i.taskDescription
-    //            task.dateCreated = i.dateCreated
-    //            task.id = i.id
-    //            array.append(task)
-    //        }
-    //        return array
-    //    }
+    var activeDateDataMedium: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 1 {
+            array.append(i)
+        }
+        return array
+    }
     
-    //    TextLimiter(limit: 110)
+    var activeDateDataLow: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 2 {
+            array.append(i)
+        }
+        return array
+    }
+    
     func enableAddTask() -> Bool {
         if task.title.isEmpty == false && task.description.isEmpty == false && task.priority != nil && task.complete != nil && task.category != nil {
             addTaskDisabled = false

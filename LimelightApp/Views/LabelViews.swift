@@ -385,6 +385,13 @@ struct TaskTracker: View {
     var position: Int
     
     @FetchRequest(
+        entity: TaskDateData.entity(),
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
+        ], predicate: NSPredicate(format: "isActive = %d", true)
+    ) var activeDateData: FetchedResults<TaskDateData>
+    
+    @FetchRequest(
         entity: TaskData.entity(),
         sortDescriptors: [
             NSSortDescriptor(keyPath: \TaskData.dateCreated, ascending: true)
@@ -394,7 +401,7 @@ struct TaskTracker: View {
     var body: some View {
         
         //let taskTrackerColor = activeDate.taskTrackerColor(onArray: activeDate.taskArray, position: position)
-        let taskTrackerColor = isCompleteTaskData.first?.taskDataTrackerColor(onArray: isCompleteTaskData, position: position)
+        let taskTrackerColor = isCompleteTaskData.first?.taskDataTrackerColor(onArray: activeDateData, position: position)
         
         Rectangle()
             .frame(height: 8)

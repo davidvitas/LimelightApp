@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showingEditTaskView = false
     @State private var showingHomeView = false
     @Environment(\.managedObjectContext) var managedObjectContext
+    @Environment(\.scenePhase) var scenePhase
     
     @State var homeButtonColor: Color = Color("DateBackground")
     @State var listButtonColor: Color = Color("DateBackgroundChosen")
@@ -35,16 +36,6 @@ struct ContentView: View {
     
     func addDate() {
         
-        //        var isEmpty: Bool {
-        //            do {
-        //                let request = NSFetchRequest<TaskDateData>(entityName: "TaskDateData")
-        //                let count  = try managedObjectContext.count(for: request)
-        //                return count == 0
-        //            } catch {
-        //                return true
-        //            }
-        //        }
-        
         if dates.isEmpty == true {
             let newDate = TaskDateData(context: managedObjectContext)
             let taskDate = TaskDate(isActive: true)
@@ -52,6 +43,19 @@ struct ContentView: View {
             newDate.date = taskDate.date
             newDate.isActive = taskDate.isActive
             PersistenceController.shared.save()
+        } else {
+            for i in dates {
+                let dateCheck = Calendar.current.isDate(Date(), equalTo: i.date, toGranularity: .day)
+                if dateCheck == false {
+                    let newDate = TaskDateData(context: managedObjectContext)
+                    let taskDate = TaskDate(isActive: false)
+                    newDate.id = taskDate.id
+                    newDate.date = taskDate.date
+                    newDate.isActive = taskDate.isActive
+                    PersistenceController.shared.save()
+                    managedObjectContext.refreshAllObjects()
+                }
+            }
         }
         
         PersistenceController.shared.save()
@@ -119,8 +123,9 @@ struct ContentView: View {
                                     .onTapGesture(perform: {
                                         for i in dates {
                                             i.isActive = false
+                                            PersistenceController.shared.save()
                                         }
-                                        dateData.isActive.toggle()
+                                        dateData.isActive = true
                                         PersistenceController.shared.save()
                                     })
                                 
