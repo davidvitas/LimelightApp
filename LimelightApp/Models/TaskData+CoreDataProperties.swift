@@ -48,5 +48,10 @@ extension TaskData {
 }
 
 extension TaskData : Identifiable {
-
+//    public var taskArray: [TaskData] {
+//        let set = taskArraySet as? Set<TaskData> ?? []
+//        return set.sorted {
+//            $0.dateCreated < $1.dateCreated
+//        }
+//    }
 }

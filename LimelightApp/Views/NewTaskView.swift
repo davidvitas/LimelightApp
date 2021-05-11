@@ -11,6 +11,11 @@ struct NewTaskView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     var taskHeaderTitle: String
     var taskButtonText: String
+    var viewMode: viewModeCase
+    @State var dateDataHighSwitch: Bool = false
+    @State var dateDataMediumSwitch: Bool = false
+    @State var dateDataLowSwitch: Bool = false
+    
     @State var addTaskDisabled = true
     @Binding var showingNewTaskView: Bool
     @Binding var showingEditTaskView: Bool
@@ -18,6 +23,11 @@ struct NewTaskView: View {
     @ObservedObject var taskTitle: TextLimiter
     @ObservedObject var taskDescription: TextLimiter
     @ObservedObject var taskData: TaskData
+    
+    enum viewModeCase: Int {
+        case new
+        case edit
+    }
     
     @FetchRequest(
         entity: TaskDateData.entity(),
@@ -58,19 +68,39 @@ struct NewTaskView: View {
         return true
     }
     
+    func priorityButtonDisable() {
+        if activeDateDataHigh.count <= 0 {
+            dateDataHighSwitch = true
+        }
+        
+        if activeDateDataMedium.count <= 2 {
+            dateDataMediumSwitch = true
+        }
+        
+        if activeDateDataLow.count <= 4 {
+            dateDataLowSwitch = true
+        }
+    }
+    
     var body: some View {
         ScrollView {
             ZStack {
                 Rectangle()
                     .foregroundColor(Color("TaskButton"))
                     .cornerRadius(40, corners: [.bottomLeft, .bottomRight])
-                if showingNewTaskView {
-                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, buttonAction: {
+                if viewMode == .new {
+                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, viewMode: viewMode.rawValue, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, buttonAction: {
                         showingNewTaskView = false
                         managedObjectContext.refreshAllObjects()
                     }, task: task)
-                } else {
-                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, task: task)
+//                    .onAppear {
+//                        priorityButtonDisable()
+//                    }
+                } else if viewMode == .edit {
+                    NewTaskHeader(taskHeaderTitle: taskHeaderTitle, viewMode: viewMode.rawValue, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, task: task)
+//                        .onAppear {
+//                            priorityButtonDisable()
+//                        }
                 }
             }
             .frame(height: 275)
@@ -98,33 +128,39 @@ struct NewTaskView: View {
                     .background(Color("RemainingText"))
                     .padding(.horizontal)
                 
+                if dateDataHighSwitch || dateDataMediumSwitch || dateDataLowSwitch {
                 TaskTitle(text: "Level of Priority")
                     .padding(.leading)
                     .padding(.top)
                 
                 HStack(spacing: 10) {
-                    
-                    
+                    if dateDataHighSwitch {
                     NewTaskButton(text: "High", buttonColor: Color(task.buttonColorHigh), textColor: Color(task.textColorHigh))
                         .onTapGesture(perform: {
                             task.priority = task.priority == .high ? nil : .high
                             task.colorChangePriority()
                         })
-                    Spacer()
+                        //Spacer()
+                    }
+                    if dateDataMediumSwitch {
                     NewTaskButton(text: "Medium", buttonColor: Color(task.buttonColorMedium), textColor: Color(task.textColorMedium))
                         .onTapGesture(perform: {
                             task.priority = task.priority == .medium ? nil : .medium
                             task.colorChangePriority()
                         })
-                    Spacer()
+                    }
+                    //Spacer()
+                    if dateDataLowSwitch {
                     NewTaskButton(text: "Low", buttonColor: Color(task.buttonColorLow), textColor: Color(task.textColorLow))
                         .onTapGesture(perform: {
                             task.priority = task.priority == .low ? nil : .low
                             task.colorChangePriority()
                         })
                 }
+                }
                 .padding(.top)
                 .padding(.horizontal)
+            }
                 
                 TaskTitle(text: "Complete by")
                     .padding(.leading)
@@ -171,13 +207,13 @@ struct NewTaskView: View {
                 VStack {
                     TaskButton(text: taskButtonText, buttonAction: {
                         task.colorAssign()
-                        //taskDate.taskArray.append(task)
-                        
-                        let taskDataEntry = TaskData(context: managedObjectContext)
+                                    
+                        let taskDataEntry: TaskData = TaskData(context: managedObjectContext)
                         NewTaskMap(task: task, taskData: taskDataEntry)
                         activeDateData.first?.addToTaskArraySet(taskDataEntry)
                         PersistenceController.shared.save()
-                        
+                        managedObjectContext.refreshAllObjects()
+
                         showingNewTaskView = false
                         addTaskDisabled = true
                     })
@@ -185,6 +221,9 @@ struct NewTaskView: View {
                     .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
                     .animation(.easeOut(duration: 0.25))
                     .buttonStyle(PlainButtonStyle())
+                    .onAppear {
+                        priorityButtonDisable()
+                    }
                 }
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
@@ -196,15 +235,17 @@ struct NewTaskView: View {
                         taskData.isExpanded = false
                         PersistenceController.shared.save()
                         managedObjectContext.refreshAllObjects()
-                        
+
                         showingEditTaskView = false
                         addTaskDisabled = true
-                        
                     })
                     .padding()
                     .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
                     .animation(.easeOut(duration: 0.25))
                     .buttonStyle(PlainButtonStyle())
+                    .onAppear {
+                        priorityButtonDisable()
+                    }
                 }
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
@@ -251,6 +292,7 @@ struct NewTaskView: View {
 
 struct NewTaskHeader: View {
     var taskHeaderTitle: String
+    var viewMode: Int
     @Binding var showingNewTaskView: Bool
     @ObservedObject var taskTitle: TextLimiter
     var buttonAction = {}
@@ -262,7 +304,7 @@ struct NewTaskHeader: View {
                 TaskHeader(text: taskHeaderTitle)
                     .padding(.top)
                 Spacer()
-                if showingNewTaskView == true {
+                if viewMode == 0 {
                     Button(action: buttonAction ) {
                         Image(systemName: "x.circle")
                             .resizable()
@@ -295,8 +337,8 @@ struct NewTaskHeader: View {
 
 struct NewTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: "123"), taskDescription: TextLimiter(limit: 110, value: "123"), taskData: TaskData())
-        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "1223"), taskData: TaskData())
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: "123"), taskDescription: TextLimiter(limit: 110, value: "123"), taskData: TaskData())
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "1223"), taskData: TaskData())
             .preferredColorScheme(.dark)
     }
 }

@@ -145,6 +145,7 @@ struct TaskView: View {
     @Binding var showingEditTaskView: Bool
     @ObservedObject var task: Task
     @ObservedObject var taskData: TaskData
+    @Binding var taskButtonDisabled: Bool
 
     @FetchRequest(
         entity: TaskDateData.entity(),
@@ -152,6 +153,30 @@ struct TaskView: View {
             NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
         ], predicate: NSPredicate(format: "isActive = %d", true)
     ) var activeDateData: FetchedResults<TaskDateData>
+    
+    var activeDateDataHigh: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
+            array.append(i)
+        }
+        return array
+    }
+    
+    var activeDateDataMedium: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 1 {
+            array.append(i)
+        }
+        return array
+    }
+    
+    var activeDateDataLow: [TaskData] {
+        var array: [TaskData] = []
+        for i in activeDateData.first?.taskArray ?? [] where i.priority == 2 {
+            array.append(i)
+        }
+        return array
+    }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -250,7 +275,7 @@ struct TaskView: View {
                     
                     HStack {
                         NavigationLink(
-                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskTitle: TextLimiter(limit: 15, value: task.title), taskDescription: TextLimiter(limit: 100, value: task.description), taskData: taskData),
+                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", viewMode: .edit, showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskTitle: TextLimiter(limit: 15, value: task.title), taskDescription: TextLimiter(limit: 100, value: task.description), taskData: taskData),
                             isActive: $showingEditTaskView,
                             label: {
                                 TaskEditButton(text: "Edit", buttonAction: {
@@ -261,7 +286,15 @@ struct TaskView: View {
                             taskData.isComplete = false
                             activeDateData.first?.removeFromTaskArraySet(taskData)
                             PersistenceController.shared.save()
+                            managedObjectContext.refreshAllObjects()
                         })
+                        .onChange(of: activeDateData.first?.taskArray) { _ in
+                            if activeDateDataHigh.count < 1 || activeDateDataMedium.count < 3 || activeDateDataLow.count < 5 {
+                                taskButtonDisabled = false
+                            } else {
+                                taskButtonDisabled = true
+                            }
+                        }
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 19)
@@ -437,7 +470,7 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData())
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false))
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
         }
     }

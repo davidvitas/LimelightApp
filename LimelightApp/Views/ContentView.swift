@@ -20,6 +20,8 @@ struct ContentView: View {
     
     @ObservedObject var taskDate: TaskDate = TaskDate(isActive: true)
     
+    @State var taskButtonDisabled: Bool = false
+    
     @FetchRequest(
         entity: TaskDateData.entity(),
         sortDescriptors: [
@@ -127,6 +129,7 @@ struct ContentView: View {
                                         }
                                         dateData.isActive = true
                                         PersistenceController.shared.save()
+                                        managedObjectContext.refreshAllObjects()
                                     })
                                 
                                 
@@ -136,7 +139,19 @@ struct ContentView: View {
                     }
                     .onAppear(perform: {
                         addDate()
+                        if activeDateDataHigh.count < 1 || activeDateDataMedium.count < 3 || activeDateDataLow.count < 5 {
+                            taskButtonDisabled = false
+                        } else {
+                            taskButtonDisabled = true
+                        }
                     })
+                    .onChange(of: activeDateData.first) { _ in
+                        if activeDateDataHigh.count < 1 || activeDateDataMedium.count < 3 || activeDateDataLow.count < 5 {
+                            taskButtonDisabled = false
+                        } else {
+                            taskButtonDisabled = true
+                        }
+                    }
                     
                     HStack(alignment: .center) {
                         HomeTitleText(text: "Daily Tasks")
@@ -178,15 +193,15 @@ struct ContentView: View {
                         .animation(.interactiveSpring())
                     Spacer()
                 } else {
-                    let activeDateMap = activeDateData.map { taskDate in
-                        TaskDate(taskDateData: taskDate)
-                    }
-                    let taskArrayHigh =
-                        activeDateMap.first?.taskArrayPriority(priority: .high)
-                    let taskArrayMedium =
-                        activeDateMap.first?.taskArrayPriority(priority: .medium)
-                    let taskArrayLow =
-                        activeDateMap.first?.taskArrayPriority(priority: .low)
+//                    let activeDateMap = activeDateData.map { taskDate in
+//                        TaskDate(taskDateData: taskDate)
+//                    }
+//                    let taskArrayHigh =
+//                        activeDateMap.first?.taskArrayPriority(priority: .high)
+//                    let taskArrayMedium =
+//                        activeDateMap.first?.taskArrayPriority(priority: .medium)
+//                    let taskArrayLow =
+//                        activeDateMap.first?.taskArrayPriority(priority: .low)
                     
                     //                    var activeDateDataHigh: [TaskData] {
                     //                        let array: [TaskData] = []
@@ -196,7 +211,7 @@ struct ContentView: View {
                     //                        return array
                     //                    }
                     
-                    if taskArrayHigh?.isEmpty == true && taskArrayMedium?.isEmpty == true && taskArrayLow?.isEmpty == true {
+                    if activeDateDataHigh.isEmpty == true && activeDateDataMedium.isEmpty == true && activeDateDataLow.isEmpty == true {
                         Spacer()
                         Spacer()
                         Spacer()
@@ -217,52 +232,51 @@ struct ContentView: View {
                         }
                     }
                     ScrollView(showsIndicators: false) {
-                        if taskArrayHigh?.isEmpty == false {
+                        if activeDateDataHigh.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "High Priority")
                                     .padding(.horizontal)
                                 
                                 ForEach(activeDateDataHigh) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
+                                        .animation(.easeOut(duration: 0.25))
                                 }
                             }
-                            .animation(.easeOut(duration: 0.25))
                             .padding(.bottom, 40)
                         }
-                        if taskArrayMedium?.isEmpty == false {
+                        if activeDateDataMedium.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "Medium Priority")
                                     //.padding(.top, 40)
                                     .padding(.horizontal)
                                 ForEach(activeDateDataMedium) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
+                                        .animation(.easeOut(duration: 0.25))
                                 }
-                                .animation(.easeOut(duration: 0.25))
                             }
                             .padding(.bottom, 40)
                         }
-                        if taskArrayLow?.isEmpty == false {
+                        if activeDateDataLow.isEmpty == false {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "Low Priority")
                                     .padding(.horizontal)
                                 ForEach(activeDateDataLow) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
+                                        .animation(.easeOut(duration: 0.25))
                                 }
                             }
-                            .animation(.easeOut(duration: 0.25))
                         }
                     }
                     .padding(.bottom)
-                    //.animation(.easeInOut)
                 }
                 
                 ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
@@ -276,13 +290,16 @@ struct ContentView: View {
                         .foregroundColor(Color("LightDarkModeBackground"))
                         .overlay (
                             NavigationLink(
-                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: ""), taskData: TaskData()),
+                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", viewMode: .new, showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: ""), taskData: TaskData()),
                                 isActive: $showingNewTaskView,
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
                                     })
                                     
                                 })
+                                .buttonStyle(PlainButtonStyle())
+                                .animation(.easeOut(duration: 0.20))
+                                .disabled(taskButtonDisabled)
                                 .padding(.horizontal)
                         )
                 }
