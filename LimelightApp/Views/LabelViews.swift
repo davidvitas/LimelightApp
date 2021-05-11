@@ -146,6 +146,9 @@ struct TaskView: View {
     @ObservedObject var task: Task
     @ObservedObject var taskData: TaskData
     @Binding var taskButtonDisabled: Bool
+    var dateDataHighSwitch: Bool
+    var dateDataMediumSwitch: Bool
+    var dateDataLowSwitch: Bool
 
     @FetchRequest(
         entity: TaskDateData.entity(),
@@ -161,7 +164,7 @@ struct TaskView: View {
         }
         return array
     }
-    
+
     var activeDateDataMedium: [TaskData] {
         var array: [TaskData] = []
         for i in activeDateData.first?.taskArray ?? [] where i.priority == 1 {
@@ -169,7 +172,7 @@ struct TaskView: View {
         }
         return array
     }
-    
+
     var activeDateDataLow: [TaskData] {
         var array: [TaskData] = []
         for i in activeDateData.first?.taskArray ?? [] where i.priority == 2 {
@@ -275,7 +278,7 @@ struct TaskView: View {
                     
                     HStack {
                         NavigationLink(
-                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", viewMode: .edit, showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskTitle: TextLimiter(limit: 15, value: task.title), taskDescription: TextLimiter(limit: 100, value: task.description), taskData: taskData),
+                            destination: NewTaskView(taskHeaderTitle: "Edit Task", taskButtonText: "Finish", viewMode: .edit, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch, showingNewTaskView: .constant(false), showingEditTaskView: $showingEditTaskView, task: task, taskTitle: TextLimiter(limit: 15, value: task.title), taskDescription: TextLimiter(limit: 100, value: task.description), taskData: taskData),
                             isActive: $showingEditTaskView,
                             label: {
                                 TaskEditButton(text: "Edit", buttonAction: {
@@ -289,7 +292,9 @@ struct TaskView: View {
                             managedObjectContext.refreshAllObjects()
                         })
                         .onChange(of: activeDateData.first?.taskArray) { _ in
-                            if activeDateDataHigh.count < 1 || activeDateDataMedium.count < 3 || activeDateDataLow.count < 5 {
+                            if activeDateDataHigh.count <= 0 || activeDateDataMedium.count <= 2 || activeDateDataLow.count <= 4 {
+                                
+                                
                                 taskButtonDisabled = false
                             } else {
                                 taskButtonDisabled = true
@@ -470,7 +475,7 @@ struct LabelViews: View {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false))
+            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false), dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false)
             TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
         }
     }

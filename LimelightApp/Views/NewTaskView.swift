@@ -12,9 +12,9 @@ struct NewTaskView: View {
     var taskHeaderTitle: String
     var taskButtonText: String
     var viewMode: viewModeCase
-    @State var dateDataHighSwitch: Bool = false
-    @State var dateDataMediumSwitch: Bool = false
-    @State var dateDataLowSwitch: Bool = false
+    var dateDataHighSwitch: Bool
+    var dateDataMediumSwitch: Bool
+    var dateDataLowSwitch: Bool
     
     @State var addTaskDisabled = true
     @Binding var showingNewTaskView: Bool
@@ -68,19 +68,19 @@ struct NewTaskView: View {
         return true
     }
     
-    func priorityButtonDisable() {
-        if activeDateDataHigh.count <= 0 {
-            dateDataHighSwitch = true
-        }
-        
-        if activeDateDataMedium.count <= 2 {
-            dateDataMediumSwitch = true
-        }
-        
-        if activeDateDataLow.count <= 4 {
-            dateDataLowSwitch = true
-        }
-    }
+//    func priorityButtonDisable() {
+//        if activeDateDataHigh.count <= 0 {
+//            dateDataHighSwitch = true
+//        }
+//
+//        if activeDateDataMedium.count <= 2 {
+//            dateDataMediumSwitch = true
+//        }
+//
+//        if activeDateDataLow.count <= 4 {
+//            dateDataLowSwitch = true
+//        }
+//    }
     
     var body: some View {
         ScrollView {
@@ -93,14 +93,10 @@ struct NewTaskView: View {
                         showingNewTaskView = false
                         managedObjectContext.refreshAllObjects()
                     }, task: task)
-//                    .onAppear {
-//                        priorityButtonDisable()
-//                    }
+
                 } else if viewMode == .edit {
                     NewTaskHeader(taskHeaderTitle: taskHeaderTitle, viewMode: viewMode.rawValue, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, task: task)
-//                        .onAppear {
-//                            priorityButtonDisable()
-//                        }
+
                 }
             }
             .frame(height: 275)
@@ -221,9 +217,9 @@ struct NewTaskView: View {
                     .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
                     .animation(.easeOut(duration: 0.25))
                     .buttonStyle(PlainButtonStyle())
-                    .onAppear {
-                        priorityButtonDisable()
-                    }
+//                    .onAppear {
+//                        priorityButtonDisable()
+//                    }
                 }
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
@@ -243,9 +239,9 @@ struct NewTaskView: View {
                     .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
                     .animation(.easeOut(duration: 0.25))
                     .buttonStyle(PlainButtonStyle())
-                    .onAppear {
-                        priorityButtonDisable()
-                    }
+//                    .onAppear {
+//                        priorityButtonDisable()
+//                    }
                 }
                 .padding()
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
@@ -337,8 +333,8 @@ struct NewTaskHeader: View {
 
 struct NewTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: "123"), taskDescription: TextLimiter(limit: 110, value: "123"), taskData: TaskData())
-        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "1223"), taskData: TaskData())
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: "123"), taskDescription: TextLimiter(limit: 110, value: "123"), taskData: TaskData())
+        NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "", viewMode: .new, dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false, showingNewTaskView: .constant(true), showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "1223"), taskData: TaskData())
             .preferredColorScheme(.dark)
     }
 }

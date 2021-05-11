@@ -12,6 +12,26 @@ struct ContentView: View {
     @State private var showingNewTaskView = false
     @State private var showingEditTaskView = false
     @State private var showingHomeView = false
+    
+    var dateDataHighSwitch: Bool {
+        if activeDateDataHigh.count <= 0 {
+            return true
+        }
+        return false
+    }
+    var dateDataMediumSwitch: Bool {
+        if activeDateDataMedium.count <= 2 {
+            return true
+        }
+        return false
+    }
+    var dateDataLowSwitch: Bool {
+        if activeDateDataLow.count <= 4 {
+            return true
+        }
+        return false
+    }
+    
     @Environment(\.managedObjectContext) var managedObjectContext
     @Environment(\.scenePhase) var scenePhase
     
@@ -74,13 +94,13 @@ struct ContentView: View {
         return formatter
     }()
     
-    var dayComponent: Date = {
-        var dayComponent = DateComponents()
-        dayComponent.day    = 1 // For removing one day (yesterday): -1
-        let theCalendar     = Calendar.current
-        let nextDate        = theCalendar.date(byAdding: dayComponent, to: Date())
-        return nextDate ?? Date()
-    }()
+//    var dayComponent: Date = {
+//        var dayComponent = DateComponents()
+//        dayComponent.day    = 1 // For removing one day (yesterday): -1
+//        let theCalendar     = Calendar.current
+//        let nextDate        = theCalendar.date(byAdding: dayComponent, to: Date())
+//        return nextDate ?? Date()
+//    }()
     
     var activeDateDataHigh: [TaskData] {
         var array: [TaskData] = []
@@ -197,15 +217,15 @@ struct ContentView: View {
                         .animation(.interactiveSpring())
                     Spacer()
                 } else {
-//                    let activeDateMap = activeDateData.map { taskDate in
-//                        TaskDate(taskDateData: taskDate)
-//                    }
-//                    let taskArrayHigh =
-//                        activeDateMap.first?.taskArrayPriority(priority: .high)
-//                    let taskArrayMedium =
-//                        activeDateMap.first?.taskArrayPriority(priority: .medium)
-//                    let taskArrayLow =
-//                        activeDateMap.first?.taskArrayPriority(priority: .low)
+                    //                    let activeDateMap = activeDateData.map { taskDate in
+                    //                        TaskDate(taskDateData: taskDate)
+                    //                    }
+                    //                    let taskArrayHigh =
+                    //                        activeDateMap.first?.taskArrayPriority(priority: .high)
+                    //                    let taskArrayMedium =
+                    //                        activeDateMap.first?.taskArrayPriority(priority: .medium)
+                    //                    let taskArrayLow =
+                    //                        activeDateMap.first?.taskArrayPriority(priority: .low)
                     
                     //                    var activeDateDataHigh: [TaskData] {
                     //                        let array: [TaskData] = []
@@ -243,7 +263,7 @@ struct ContentView: View {
                                 
                                 ForEach(activeDateDataHigh) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                         .animation(.easeOut(duration: 0.25))
@@ -258,7 +278,7 @@ struct ContentView: View {
                                     .padding(.horizontal)
                                 ForEach(activeDateDataMedium) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("MediumPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                         .animation(.easeOut(duration: 0.25))
@@ -272,7 +292,7 @@ struct ContentView: View {
                                     .padding(.horizontal)
                                 ForEach(activeDateDataLow) { taskData in
                                     let task = Task(coreData: taskData)
-                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled)
+                                    TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("LowPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch)
                                         .padding(.top, 10)
                                         .padding(.horizontal)
                                         .animation(.easeOut(duration: 0.25))
@@ -294,7 +314,7 @@ struct ContentView: View {
                         .foregroundColor(Color("LightDarkModeBackground"))
                         .overlay (
                             NavigationLink(
-                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", viewMode: .new, showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: ""), taskData: TaskData()),
+                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", viewMode: .new, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch, showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: ""), taskData: TaskData()),
                                 isActive: $showingNewTaskView,
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
