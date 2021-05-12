@@ -46,17 +46,21 @@ struct ContentView: View {
             newDate.isActive = taskDate.isActive
             PersistenceController.shared.save()
         } else {
+            var sameDatePresent: Bool = false
             for i in dates {
                 let dateCheck = Calendar.current.isDate(Date(), equalTo: i.date, toGranularity: .day)
-                if dateCheck == false {
-                    let newDate = TaskDateData(context: managedObjectContext)
-                    let taskDate = TaskDate(isActive: false)
-                    newDate.id = taskDate.id
-                    newDate.date = taskDate.date
-                    newDate.isActive = taskDate.isActive
-                    PersistenceController.shared.save()
-                    managedObjectContext.refreshAllObjects()
+                if dateCheck == true {
+                    sameDatePresent = true
                 }
+            }
+            if sameDatePresent == false {
+                let newDate = TaskDateData(context: managedObjectContext)
+                let taskDate = TaskDate(isActive: false)
+                newDate.id = taskDate.id
+                newDate.date = taskDate.date
+                newDate.isActive = taskDate.isActive
+                PersistenceController.shared.save()
+                managedObjectContext.refreshAllObjects()
             }
         }
         
