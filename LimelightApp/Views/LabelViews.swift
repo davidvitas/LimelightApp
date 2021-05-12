@@ -107,10 +107,9 @@ struct DashboardPriorityView: View {
                             .fontWeight(.bold)
                             .font(.title2)
                             .kerning(0.44)
-                        //.offset(x: -0.5)
-                    }                    .frame(width: 58, height: 77, alignment: .trailing)
+                    }
+                    .frame(width: 54, height: 77, alignment: .trailing)
                     .padding(.leading, 9)
-                    //Spacer()
                     VStack(alignment: .leading) {
                         Text(priority)
                             .foregroundColor(Color("PriorityTextHeader"))
@@ -118,15 +117,16 @@ struct DashboardPriorityView: View {
                             .font(.title3)
                             .kerning(0.4)
                         
-                        Text("\(listed) listed / \(remaining) remaining / \(completed) completed")
+                        Text("\(listed) listed / \(remaining) remaining / \(completed) complete")
                             .foregroundColor(Color("RemainingText"))
                             .fontWeight(.regular)
                             .font(.callout)
                             .kerning(0.32)
                             .lineLimit(1)
-                        
                     }
-                    .padding(.horizontal)
+                    //.padding(.trailing)
+                    .padding(.leading, 4)
+                    .padding(.trailing, 2)
                 }
             }
         }
@@ -481,7 +481,8 @@ struct LabelViews: View {
     var body: some View {
         VStack {
             
-//            DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 0, remaining: 2, completed: 3, priorityColor: Color("HighPriority"))
+            DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 8, remaining: 8, completed: 8, priorityColor: Color("HighPriority"))
+                .padding(.horizontal)
 //            //.padding()
 //            TaskButton(text: "Create New Task")
 //            OptionsButton()
@@ -493,6 +494,7 @@ struct LabelViews: View {
 //            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false), dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false)
 //            TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
             InfoButton()
+            DateView(dateDay: "123", dateNumber: "45", taskDate: TaskDate(isActive: true))
         }
     }
 }

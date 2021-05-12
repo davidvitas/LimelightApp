@@ -24,10 +24,10 @@ struct HomeView: View {
                     //.padding(.top, 10)
                     .padding(.horizontal)
                 DashboardPriorityView(priority: "Medium Priority", priorityAmount: "3", listed: taskPriorityMedium.count, remaining: activeDate.taskArrayIsComplete(onArray: taskPriorityMedium, completed: false).count, completed: activeDate.taskArrayIsComplete(onArray: taskPriorityMedium, completed: true).count, priorityColor: Color("MediumPriority"))
-                    .padding(.top)
+                    .padding(.top, 10)
                     .padding(.horizontal)
                 DashboardPriorityView(priority: "Low Priority", priorityAmount: "5", listed: taskPriorityLow.count, remaining: activeDate.taskArrayIsComplete(onArray: taskPriorityLow, completed: false).count, completed: activeDate.taskArrayIsComplete(onArray: taskPriorityLow, completed: true).count, priorityColor: Color("LowPriority"))
-                    .padding(.top)
+                    .padding(.top, 10)
                     .padding(.horizontal)
             }
     }

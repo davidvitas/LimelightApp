@@ -46,7 +46,7 @@ struct ContentView: View {
     @FetchRequest(
         entity: TaskDateData.entity(),
         sortDescriptors: [
-            NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
+            NSSortDescriptor(keyPath: \TaskDateData.date, ascending: false)
         ]
     ) var dates: FetchedResults<TaskDateData>
     
@@ -75,8 +75,11 @@ struct ContentView: View {
                 }
             }
             if sameDatePresent == false {
+                for i in dates {
+                    i.isActive = false
+                }
                 let newDate = TaskDateData(context: managedObjectContext)
-                let taskDate = TaskDate(isActive: false)
+                let taskDate = TaskDate(isActive: true)
                 newDate.id = taskDate.id
                 newDate.date = taskDate.date
                 newDate.isActive = taskDate.isActive
@@ -148,7 +151,7 @@ struct ContentView: View {
                     }
                     .padding()
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 20) {
+                        LazyHStack(spacing: 20) {
                             ForEach(dates) { dateData in
                                 let date = TaskDate(taskDateData: dateData)
                                 DateView(dateDay: date.shortDateFormatDay.string(from: date.date), dateNumber: date.shortDateFormatNum.string(from: date.date), taskDate: date)
@@ -165,6 +168,7 @@ struct ContentView: View {
                                 
                             }
                         }
+                        .frame(height: 72)
                         .padding()
                     }
                     .onAppear(perform: {
@@ -219,28 +223,13 @@ struct ContentView: View {
                     let activeDateMap = activeDateData.map { taskDate in
                         TaskDate(taskDateData: taskDate)
                     }
-                    HomeView(activeDate: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap))
-                        .animation(.interactiveSpring())
-                    Spacer()
+                    ScrollView {
+                        HomeView(activeDate: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap))
+                            .animation(.interactiveSpring())
+                    }
+                    .padding(.bottom, -40)
+                    //Spacer()
                 } else {
-                    //                    let activeDateMap = activeDateData.map { taskDate in
-                    //                        TaskDate(taskDateData: taskDate)
-                    //                    }
-                    //                    let taskArrayHigh =
-                    //                        activeDateMap.first?.taskArrayPriority(priority: .high)
-                    //                    let taskArrayMedium =
-                    //                        activeDateMap.first?.taskArrayPriority(priority: .medium)
-                    //                    let taskArrayLow =
-                    //                        activeDateMap.first?.taskArrayPriority(priority: .low)
-                    
-                    //                    var activeDateDataHigh: [TaskData] {
-                    //                        let array: [TaskData] = []
-                    //                        for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
-                    //                            array.append(i)
-                    //                        }
-                    //                        return array
-                    //                    }
-                    
                     if activeDateDataHigh.isEmpty == true && activeDateDataMedium.isEmpty == true && activeDateDataLow.isEmpty == true {
                         Spacer()
                         Spacer()
@@ -313,7 +302,7 @@ struct ContentView: View {
                     Rectangle()
                         .frame(height: 60)
                         .foregroundColor(.white)
-                        .shadow(color: Color("LightDarkModeShadow"), radius: 25, x: 0, y: -5)
+                        .shadow(color: Color("LightDarkModeShadow"), radius: 20, x: 0, y: 0)
                         .opacity(0.33)
                     Rectangle()
                         .frame(height: 110)

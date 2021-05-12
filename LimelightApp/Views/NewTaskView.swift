@@ -35,7 +35,7 @@ struct NewTaskView: View {
             NSSortDescriptor(keyPath: \TaskDateData.date, ascending: true)
         ], predicate: NSPredicate(format: "isActive = %d", true)
     ) var activeDateData: FetchedResults<TaskDateData>
-
+    
     var activeDateDataHigh: [TaskData] {
         var array: [TaskData] = []
         for i in activeDateData.first?.taskArray ?? [] where i.priority == 0 {
@@ -68,189 +68,186 @@ struct NewTaskView: View {
         return true
     }
     
-//    func priorityButtonDisable() {
-//        if activeDateDataHigh.count <= 0 {
-//            dateDataHighSwitch = true
-//        }
-//
-//        if activeDateDataMedium.count <= 2 {
-//            dateDataMediumSwitch = true
-//        }
-//
-//        if activeDateDataLow.count <= 4 {
-//            dateDataLowSwitch = true
-//        }
-//    }
-    
     var body: some View {
-        ScrollView {
+        VStack {
             ZStack {
                 Rectangle()
+                    .cornerRadius(20, corners: [.bottomLeft, .bottomRight])
                     .foregroundColor(Color("TaskButton"))
-                    .cornerRadius(40, corners: [.bottomLeft, .bottomRight])
+                    .shadow(color: Color("LightDarkModeShadow").opacity(0.33), radius: 25, x: 0, y: 5)
                 if viewMode == .new {
                     NewTaskHeader(taskHeaderTitle: taskHeaderTitle, viewMode: viewMode.rawValue, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, buttonAction: {
                         showingNewTaskView = false
                         managedObjectContext.refreshAllObjects()
                     }, task: task)
-
+                    
                 } else if viewMode == .edit {
                     NewTaskHeader(taskHeaderTitle: taskHeaderTitle, viewMode: viewMode.rawValue, showingNewTaskView: $showingNewTaskView, taskTitle: taskTitle, task: task)
-
+                    
                 }
             }
             .frame(height: 275)
             
             Spacer()
-            VStack(alignment: .leading) {
-                TaskTitle(text: "Description")
-                    .padding(.leading)
-                    .padding(.top)
-                
-                ZStack(alignment: .leading) {
-                    if taskDescription.value.isEmpty {
-                        TextFieldText(text: "add a short description for this task...")
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    TaskTitle(text: "Description")
+                        .padding(.leading)
+                        .padding(.top)
+                    
+                    ZStack(alignment: .leading) {
+                        if taskDescription.value.isEmpty {
+                            TextFieldText(text: "add a short description for this task...")
+                        }
+                        TextField("", text: $taskDescription.value)
+                            .onChange(of: taskDescription.value, perform: { value in
+                                task.description = taskDescription.value
+                            })
                     }
-                    TextField("", text: $taskDescription.value)
-                        .onChange(of: taskDescription.value, perform: { value in
-                            task.description = taskDescription.value
-                        })
-                }
-                .padding(.horizontal)
-                .padding(.top, 15)
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color("RemainingText"))
                     .padding(.horizontal)
-                
-                if dateDataHighSwitch || dateDataMediumSwitch || dateDataLowSwitch {
-                TaskTitle(text: "Level of Priority")
-                    .padding(.leading)
-                    .padding(.top)
-                
-                HStack(spacing: 10) {
-                    if dateDataHighSwitch {
-                    NewTaskButton(text: "High", buttonColor: Color(task.buttonColorHigh), textColor: Color(task.textColorHigh))
-                        .onTapGesture(perform: {
-                            task.priority = task.priority == .high ? nil : .high
-                            task.colorChangePriority()
-                        })
-                        //Spacer()
+                    .padding(.top, 15)
+                    
+                    Divider()
+                        .frame(height: 1)
+                        .background(Color("RemainingText"))
+                        .padding(.horizontal)
+                    
+                    if dateDataHighSwitch || dateDataMediumSwitch || dateDataLowSwitch {
+                        TaskTitle(text: "Level of Priority")
+                            .padding(.leading)
+                            .padding(.top)
+                        
+                        HStack(spacing: 10) {
+                            if dateDataHighSwitch {
+                                NewTaskButton(text: "High", buttonColor: Color(task.buttonColorHigh), textColor: Color(task.textColorHigh))
+                                    .onTapGesture(perform: {
+                                        task.priority = task.priority == .high ? nil : .high
+                                        task.colorChangePriority()
+                                        hideKeyboard()
+                                    })
+                                //Spacer()
+                            }
+                            if dateDataMediumSwitch {
+                                NewTaskButton(text: "Medium", buttonColor: Color(task.buttonColorMedium), textColor: Color(task.textColorMedium))
+                                    .onTapGesture(perform: {
+                                        task.priority = task.priority == .medium ? nil : .medium
+                                        task.colorChangePriority()
+                                        hideKeyboard()
+                                    })
+                            }
+                            //Spacer()
+                            if dateDataLowSwitch {
+                                NewTaskButton(text: "Low", buttonColor: Color(task.buttonColorLow), textColor: Color(task.textColorLow))
+                                    .onTapGesture(perform: {
+                                        task.priority = task.priority == .low ? nil : .low
+                                        task.colorChangePriority()
+                                        hideKeyboard()
+                                    })
+                            }
+                        }
+                        .padding(.top)
+                        .padding(.horizontal)
                     }
-                    if dateDataMediumSwitch {
-                    NewTaskButton(text: "Medium", buttonColor: Color(task.buttonColorMedium), textColor: Color(task.textColorMedium))
-                        .onTapGesture(perform: {
-                            task.priority = task.priority == .medium ? nil : .medium
-                            task.colorChangePriority()
-                        })
+                    
+                    TaskTitle(text: "Complete by")
+                        .padding(.leading)
+                        .padding(.top)
+                    
+                    HStack(spacing: 10) {
+                        NewTaskButton(text: "End of Day", buttonColor: Color(task.buttonColorEndOfDay), textColor: Color(task.textColorEndOfDay))
+                            .onTapGesture(perform: {
+                                task.complete = task.complete == .endOfDay ? nil : .endOfDay
+                                task.colorChangeComplete()
+                                hideKeyboard()
+                            })
+                        Spacer()
+                        NewTaskButton(text: "Within 24 Hours", buttonColor: Color(task.buttonColorWithin24Hours), textColor: Color(task.textColorWithin24Hours))
+                            .onTapGesture(perform: {
+                                task.complete = task.complete == .within24Hours ? nil : .within24Hours
+                                task.colorChangeComplete()
+                                hideKeyboard()
+                            })
                     }
-                    //Spacer()
-                    if dateDataLowSwitch {
-                    NewTaskButton(text: "Low", buttonColor: Color(task.buttonColorLow), textColor: Color(task.textColorLow))
-                        .onTapGesture(perform: {
-                            task.priority = task.priority == .low ? nil : .low
-                            task.colorChangePriority()
-                        })
-                }
-                }
-                .padding(.top)
-                .padding(.horizontal)
-            }
-                
-                TaskTitle(text: "Complete by")
-                    .padding(.leading)
                     .padding(.top)
-                
-                HStack(spacing: 10) {
-                    NewTaskButton(text: "End of Day", buttonColor: Color(task.buttonColorEndOfDay), textColor: Color(task.textColorEndOfDay))
-                        .onTapGesture(perform: {
-                            task.complete = task.complete == .endOfDay ? nil : .endOfDay
-                            task.colorChangeComplete()
-                        })
-                    Spacer()
-                    NewTaskButton(text: "Within 24 Hours", buttonColor: Color(task.buttonColorWithin24Hours), textColor: Color(task.textColorWithin24Hours))
-                        .onTapGesture(perform: {
-                            task.complete = task.complete == .within24Hours ? nil : .within24Hours
-                            task.colorChangeComplete()
-                        })
-                }
-                .padding(.top)
-                .padding(.horizontal)
-                
-                TaskTitle(text: "Category")
-                    .padding(.leading)
+                    .padding(.horizontal)
+                    
+                    TaskTitle(text: "Category")
+                        .padding(.leading)
+                        .padding(.top)
+                    
+                    HStack(spacing: 10) {
+                        NewTaskButton(text: "Home", isCategory: true, buttonColor: Color(task.buttonColorHome), textColor: Color(task.textColorHome), categorySquareColor: Color(task.categorySquareHome))
+                            .onTapGesture(perform: {
+                                task.category = task.category == .home ? nil : .home
+                                task.colorChangeCategory()
+                                hideKeyboard()
+                            })
+                        Spacer()
+                        NewTaskButton(text: "Work", isCategory: true, buttonColor: Color(task.buttonColorWork), textColor: Color(task.textColorWork), categorySquareColor: Color(task.categorySquareWork))
+                            .onTapGesture(perform: {
+                                task.category = task.category == .work ? nil : .work
+                                task.colorChangeCategory()
+                                hideKeyboard()
+                            })
+                    }
                     .padding(.top)
-                
-                HStack(spacing: 10) {
-                    NewTaskButton(text: "Home", isCategory: true, buttonColor: Color(task.buttonColorHome), textColor: Color(task.textColorHome), categorySquareColor: Color(task.categorySquareHome))
-                        .onTapGesture(perform: {
-                            task.category = task.category == .home ? nil : .home
-                            task.colorChangeCategory()
+                    .padding(.horizontal)
+                }
+                .padding(.vertical)
+                if showingNewTaskView {
+                    VStack {
+                        TaskButton(text: taskButtonText, buttonAction: {
+                            task.colorAssign()
+                            
+                            let taskDataEntry: TaskData = TaskData(context: managedObjectContext)
+                            NewTaskMap(task: task, taskData: taskDataEntry)
+                            activeDateData.first?.addToTaskArraySet(taskDataEntry)
+                            PersistenceController.shared.save()
+                            managedObjectContext.refreshAllObjects()
+                            
+                            showingNewTaskView = false
+                            addTaskDisabled = true
                         })
-                    Spacer()
-                    NewTaskButton(text: "Work", isCategory: true, buttonColor: Color(task.buttonColorWork), textColor: Color(task.textColorWork), categorySquareColor: Color(task.categorySquareWork))
-                        .onTapGesture(perform: {
-                            task.category = task.category == .work ? nil : .work
-                            task.colorChangeCategory()
+                        .padding()
+                        .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
+                        .animation(.easeOut(duration: 0.25))
+                        .buttonStyle(PlainButtonStyle())
+                        //                    .onAppear {
+                        //                        priorityButtonDisable()
+                        //                    }
+                    }
+                    .padding()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+                } else {
+                    VStack {
+                        TaskButton(text: taskButtonText, buttonAction: {
+                            task.colorAssign()
+                            NewTaskMap(task: task, taskData: taskData)
+                            taskData.isExpanded = false
+                            PersistenceController.shared.save()
+                            managedObjectContext.refreshAllObjects()
+                            
+                            showingEditTaskView = false
+                            addTaskDisabled = true
                         })
-                }
-                .padding(.top)
-                .padding(.horizontal)
-            }
-            .padding(.vertical)
-            if showingNewTaskView {
-                VStack {
-                    TaskButton(text: taskButtonText, buttonAction: {
-                        task.colorAssign()
-                                    
-                        let taskDataEntry: TaskData = TaskData(context: managedObjectContext)
-                        NewTaskMap(task: task, taskData: taskDataEntry)
-                        activeDateData.first?.addToTaskArraySet(taskDataEntry)
-                        PersistenceController.shared.save()
-                        managedObjectContext.refreshAllObjects()
-
-                        showingNewTaskView = false
-                        addTaskDisabled = true
-                    })
+                        .padding()
+                        .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
+                        .animation(.easeOut(duration: 0.25))
+                        .buttonStyle(PlainButtonStyle())
+                        //                    .onAppear {
+                        //                        priorityButtonDisable()
+                        //                    }
+                    }
                     .padding()
-                    .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
-                    .animation(.easeOut(duration: 0.25))
-                    .buttonStyle(PlainButtonStyle())
-//                    .onAppear {
-//                        priorityButtonDisable()
-//                    }
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
                 }
-                .padding()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
-            } else {
-                VStack {
-                    TaskButton(text: taskButtonText, buttonAction: {
-                        task.colorAssign()
-                        NewTaskMap(task: task, taskData: taskData)
-                        taskData.isExpanded = false
-                        PersistenceController.shared.save()
-                        managedObjectContext.refreshAllObjects()
-
-                        showingEditTaskView = false
-                        addTaskDisabled = true
-                    })
-                    .padding()
-                    .disabled(taskTitle.value.isEmpty || taskDescription.value.isEmpty || task.priority == nil || task.complete == nil || task.category == nil)
-                    .animation(.easeOut(duration: 0.25))
-                    .buttonStyle(PlainButtonStyle())
-//                    .onAppear {
-//                        priorityButtonDisable()
-//                    }
-                }
-                .padding()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
             }
+            .padding(.top, -8)
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
         }
         .edgesIgnoringSafeArea(.top)
-        .navigationBarTitle("")
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
     }
     
     func NewTaskMap(task: Task, taskData: TaskData) {
@@ -356,3 +353,12 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+
+// Extension that hides keyboard
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
