@@ -94,13 +94,13 @@ struct ContentView: View {
         return formatter
     }()
     
-//    var dayComponent: Date = {
-//        var dayComponent = DateComponents()
-//        dayComponent.day    = 1 // For removing one day (yesterday): -1
-//        let theCalendar     = Calendar.current
-//        let nextDate        = theCalendar.date(byAdding: dayComponent, to: Date())
-//        return nextDate ?? Date()
-//    }()
+    //    var dayComponent: Date = {
+    //        var dayComponent = DateComponents()
+    //        dayComponent.day    = 1 // For removing one day (yesterday): -1
+    //        let theCalendar     = Calendar.current
+    //        let nextDate        = theCalendar.date(byAdding: dayComponent, to: Date())
+    //        return nextDate ?? Date()
+    //    }()
     
     var activeDateDataHigh: [TaskData] {
         var array: [TaskData] = []
@@ -132,13 +132,13 @@ struct ContentView: View {
             VStack(alignment: .center) {
                 
                 VStack {
-                    HStack {
+                    HStack(alignment: .lastTextBaseline) {
                         let activeDateMap = activeDateData.map { taskDate in
                             TaskDate(taskDateData: taskDate)
                         }
                         DateText(date: ContentView.taskDateFormat.string(from: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap).date))
                         Spacer()
-                        OptionsButton()
+                        InfoButton()
                     }
                     .padding()
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -300,14 +300,14 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .padding(.bottom)
+                    .padding(.bottom, -10)
                 }
                 
                 ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
                     Rectangle()
                         .frame(height: 60)
                         .foregroundColor(.white)
-                        .shadow(color: Color("LightDarkModeShadow"), radius: 20, x: 0, y: -5)
+                        .shadow(color: Color("LightDarkModeShadow"), radius: 25, x: 0, y: -5)
                         .opacity(0.33)
                     Rectangle()
                         .frame(height: 110)
@@ -319,15 +319,25 @@ struct ContentView: View {
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
                                     })
-                                    
                                 })
                                 .buttonStyle(PlainButtonStyle())
                                 .animation(.easeOut(duration: 0.20))
                                 .disabled(taskButtonDisabled)
                                 .padding(.horizontal)
+//                                .onChange(of: scenePhase) { phase in
+//                                    if phase == .active {
+//                                        for i in dates {
+//                                            i.isActive = false
+//                                            PersistenceController.shared.save()
+//                                            if Calendar.current.isDate(Date(), equalTo: i.date, toGranularity: .day) {
+//                                                i.isActive = true
+//                                            }
+//                                        }
+//                                    }
+//                                }
+                            
                         )
                 }
-                
             }
             .navigationBarTitle("")
             .navigationBarHidden(true)

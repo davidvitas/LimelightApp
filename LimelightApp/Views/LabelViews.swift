@@ -375,6 +375,21 @@ struct OptionsButton: View {
     }
 }
 
+struct InfoButton: View {
+    var buttonAction = {}
+    
+    var body: some View {
+        Button(action: buttonAction) {
+           Image(systemName: "info.circle")
+            .resizable()
+            .scaledToFit()
+            .foregroundColor(Color("DateTitleText"))
+            .frame(width: 19, height: 19)
+            
+        }
+    }
+}
+
 struct NewTaskButton: View {
     var text: String
     var isCategory: Bool = false
@@ -466,17 +481,18 @@ struct LabelViews: View {
     var body: some View {
         VStack {
             
-            DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 0, remaining: 2, completed: 3, priorityColor: Color("HighPriority"))
-            //.padding()
-            TaskButton(text: "Create New Task")
-            OptionsButton()
+//            DashboardPriorityView(priority: "High Priority", priorityAmount: "1", listed: 0, remaining: 2, completed: 3, priorityColor: Color("HighPriority"))
+//            //.padding()
+//            TaskButton(text: "Create New Task")
+//            OptionsButton()
             HStack {
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "123")
                 NewTaskButton(text: "12345", isCategory: true)
             }
-            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false), dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false)
-            TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
+//            TaskView(taskTitle: "Grocery Shopping", category: "Home", complete: "123", priorityColor: Color("HighPriority"), description: "123wfafwafawf", showingEditTaskView: .constant(false), task: Task(), taskData: TaskData(), taskButtonDisabled: .constant(false), dateDataHighSwitch: false, dateDataMediumSwitch: false, dateDataLowSwitch: false)
+//            TaskTracker(activeDate: TaskDate(isActive: false), position: 1)
+            InfoButton()
         }
     }
 }
