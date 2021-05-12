@@ -222,8 +222,8 @@ struct NewTaskView: View {
                     VStack {
                         TaskButton(text: taskButtonText, buttonAction: {
                             task.colorAssign()
+                            task.isExpanded = false
                             NewTaskMap(task: task, taskData: taskData)
-                            taskData.isExpanded = false
                             PersistenceController.shared.save()
                             managedObjectContext.refreshAllObjects()
                             

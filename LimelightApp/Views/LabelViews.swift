@@ -206,6 +206,11 @@ struct TaskView: View {
                     Button(action: {
                         taskData.isComplete.toggle()
                         PersistenceController.shared.save()
+                        if taskData.isExpanded == true && taskData.isComplete == true {
+                            taskData.isExpanded = false
+                            PersistenceController.shared.save()
+                            managedObjectContext.refreshAllObjects()
+                        }
                         
                     }) {
                         ZStack {
