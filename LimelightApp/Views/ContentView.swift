@@ -164,8 +164,6 @@ struct ContentView: View {
                                         PersistenceController.shared.save()
                                         managedObjectContext.refreshAllObjects()
                                     })
-                                
-                                
                             }
                         }
                         .frame(height: 72)
@@ -186,7 +184,11 @@ struct ContentView: View {
                             taskButtonDisabled = true
                         }
                     }
-                    
+                    .onDisappear {
+                        for i in activeDateData.first?.taskArray ?? [] {
+                            i.isExpanded = false
+                        }
+                    }
                     HStack(alignment: .center) {
                         HomeTitleText(text: "Daily Tasks")
                         Spacer()
@@ -337,7 +339,6 @@ struct ContentView: View {
             .navigationBarTitle("")
             .navigationBarHidden(true)
         }
-        
     }
     
 }
