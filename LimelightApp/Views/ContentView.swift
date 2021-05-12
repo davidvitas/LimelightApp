@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var showingNewTaskView = false
     @State private var showingEditTaskView = false
     @State private var showingHomeView = false
+    @State private var showingInfoAlert = false
     
     var dateDataHighSwitch: Bool {
         if activeDateDataHigh.count <= 0 {
@@ -138,7 +139,12 @@ struct ContentView: View {
                         }
                         DateText(date: ContentView.taskDateFormat.string(from: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap).date))
                         Spacer()
-                        InfoButton()
+                        InfoButton(buttonAction: {
+                        showingInfoAlert = true
+                        })
+                        .alert(isPresented: $showingInfoAlert, content: {
+                            Alert(title: Text("Tutorial"), message: Text("This is a tutorial"), dismissButton: .default(Text("Got it!")))
+                        })
                     }
                     .padding()
                     ScrollView(.horizontal, showsIndicators: false) {
