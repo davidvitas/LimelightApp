@@ -143,7 +143,7 @@ struct ContentView: View {
                         DateText(date: ContentView.taskDateFormat.string(from: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap).date))
                         Spacer()
                         InfoButton(buttonAction: {
-                        showingInfoAlert = true
+                            showingInfoAlert = true
                         })
                         .alert(isPresented: $showingInfoAlert, content: {
                             Alert(title: Text("Tutorial"), message: Text("This is a tutorial"), dismissButton: .default(Text("Got it!")))
@@ -185,10 +185,24 @@ struct ContentView: View {
                         }
                     }
                     .onDisappear {
-                        for i in activeDateData.first?.taskArray ?? [] {
-                            i.isExpanded = false
+                        for i in dates {
+                            for tasks in i.taskArray {
+                                tasks.isExpanded = false
+                            }
                         }
                     }
+                    .onChange(of: scenePhase) { phase in
+                        if phase == .inactive {
+                            for i in dates {
+                                for tasks in i.taskArray {
+                                    tasks.isExpanded = false
+                                }
+                            }
+                        }
+                        PersistenceController.shared.save()
+                        managedObjectContext.refreshAllObjects()
+                    }
+                    
                     HStack(alignment: .center) {
                         HomeTitleText(text: "Daily Tasks")
                         Spacer()
@@ -227,7 +241,7 @@ struct ContentView: View {
                     }
                     ScrollView {
                         HomeView(activeDate: taskDate.taskDateIsActive(taskDateDataArray: activeDateMap))
-                            .animation(.interactiveSpring())
+//                            .animation(.interactiveSpring())
                     }
                     .padding(.bottom, -40)
                     //Spacer()
@@ -257,7 +271,6 @@ struct ContentView: View {
                             VStack(alignment: .leading) {
                                 ListHeader(text: "High Priority")
                                     .padding(.horizontal)
-                                
                                 ForEach(activeDateDataHigh) { taskData in
                                     let task = Task(coreData: taskData)
                                     TaskView(taskTitle: task.title, category: task.category?.rawValue ?? "", complete: task.complete?.rawValue ?? "", priorityColor: Color("HighPriority"), description: task.description, showingEditTaskView: $showingEditTaskView, task: task, taskData: taskData, taskButtonDisabled: $taskButtonDisabled, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch)
@@ -311,7 +324,7 @@ struct ContentView: View {
                         .foregroundColor(Color("LightDarkModeBackground"))
                         .overlay (
                             NavigationLink(
-                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", viewMode: .new, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch, showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: ""), taskData: TaskData()),
+                                destination: NewTaskView(taskHeaderTitle: "Create New Task", taskButtonText: "Add Task", viewMode: .new, dateDataHighSwitch: dateDataHighSwitch, dateDataMediumSwitch: dateDataMediumSwitch, dateDataLowSwitch: dateDataLowSwitch, showingNewTaskView: $showingNewTaskView, showingEditTaskView: .constant(false), task: Task(), taskTitle: TextLimiter(limit: 25, value: ""), taskDescription: TextLimiter(limit: 110, value: "")),
                                 isActive: $showingNewTaskView,
                                 label: {
                                     TaskButton(text: "Create New Task", buttonAction: { showingNewTaskView = true
@@ -321,17 +334,17 @@ struct ContentView: View {
                                 .animation(.easeOut(duration: 0.20))
                                 .disabled(taskButtonDisabled)
                                 .padding(.horizontal)
-//                                .onChange(of: scenePhase) { phase in
-//                                    if phase == .active {
-//                                        for i in dates {
-//                                            i.isActive = false
-//                                            PersistenceController.shared.save()
-//                                            if Calendar.current.isDate(Date(), equalTo: i.date, toGranularity: .day) {
-//                                                i.isActive = true
-//                                            }
-//                                        }
-//                                    }
-//                                }
+                            //                                .onChange(of: scenePhase) { phase in
+                            //                                    if phase == .active {
+                            //                                        for i in dates {
+                            //                                            i.isActive = false
+                            //                                            PersistenceController.shared.save()
+                            //                                            if Calendar.current.isDate(Date(), equalTo: i.date, toGranularity: .day) {
+                            //                                                i.isActive = true
+                            //                                            }
+                            //                                        }
+                            //                                    }
+                            //                                }
                             
                         )
                 }

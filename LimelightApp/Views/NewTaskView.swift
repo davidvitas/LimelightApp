@@ -22,7 +22,7 @@ struct NewTaskView: View {
     @ObservedObject var task: Task
     @ObservedObject var taskTitle: TextLimiter
     @ObservedObject var taskDescription: TextLimiter
-    @ObservedObject var taskData: TaskData
+    var taskData: TaskData?
     
     enum viewModeCase: Int {
         case new
@@ -223,7 +223,7 @@ struct NewTaskView: View {
                         TaskButton(text: taskButtonText, buttonAction: {
                             task.colorAssign()
                             task.isExpanded = false
-                            NewTaskMap(task: task, taskData: taskData)
+                            NewTaskMap(task: task, taskData: taskData ?? TaskData())
                             PersistenceController.shared.save()
                             managedObjectContext.refreshAllObjects()
                             
