@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="93px" height="88px" viewBox="0 0 93 88" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Icon-Template" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-11" transform="translate(-161.000000, -404.000000)">
+            <g id="Group" transform="translate(161.000000, 404.000000)">
+                <g id="Low" transform="translate(-0.000000, 64.842105)">
+                    <rect id="Rectangle" fill="#333333" x="0" y="0.157894737" width="92" height="23"></rect>
+                    <rect id="Rectangle" fill="#51B6C6" x="0" y="0.157894737" width="6" height="23"></rect>
+                </g>
+                <g id="Medium" transform="translate(-0.000000, 32.421053)">
+                    <rect id="Rectangle" fill="#333333" x="0" y="0.578947368" width="92" height="23"></rect>
+                    <rect id="Rectangle" fill="#FCBD32" x="0" y="0.578947368" width="6" height="23"></rect>
+                </g>
+                <g id="High" transform="translate(-0.000000, -0.000000)">
+                    <rect id="Rectangle" fill="#333333" x="0" y="-5.68434189e-14" width="92" height="23"></rect>
+                    <rect id="Rectangle" fill="#C6798F" x="0" y="-5.68434189e-14" width="6" height="23"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -200,7 +200,7 @@ struct ContentView: View {
                             }
                         }
                         PersistenceController.shared.save()
-                        managedObjectContext.refreshAllObjects()
+                        //managedObjectContext.refreshAllObjects()
                     }
                     
                     HStack(alignment: .center) {
